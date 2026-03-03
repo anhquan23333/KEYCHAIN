@@ -115,6 +115,9 @@
         .canvas-container:active { cursor: grabbing; }
         .instruction { font-size: 12px; color: #94a3b8; text-align: center; margin-bottom: 20px; font-weight: 400; }
 
+        .slider-row { display: flex; gap: 20px; }
+        .slider-col { flex: 1; }
+
         /* NÚT BẤM PREMIUM */
         button { 
             width: 100%; font-family: 'Montserrat', sans-serif;
@@ -209,9 +212,8 @@
                 <label>Khoảng cách chữ: <span id="valSpace1" style="color:#38bdf8">13</span> px</label>
                 <input type="range" id="kcSpace1" min="13" max="18" value="13" step="1">
             </div>
-            <div class="input-group">
-                <label>Trục Ngang (X): <span id="valX1" style="color:#38bdf8">0</span></label>
-                <input type="range" id="kcX1" min="-30" max="30" value="0" step="0.5">
+            <div class="slider-row">
+                <div class="slider-col"><label>Trục Ngang (X): <span id="valX1" style="color:#38bdf8">0</span></label><input type="range" id="kcX1" min="-30" max="30" value="0" step="0.5"></div>
             </div>
         </div>
 
@@ -242,9 +244,8 @@
                 <label>Khoảng cách chữ: <span id="valSpace2" style="color:#38bdf8">13</span> px</label>
                 <input type="range" id="kcSpace2" min="13" max="18" value="13" step="1">
             </div>
-            <div class="input-group">
-                <label>Trục Ngang (X): <span id="valX2" style="color:#38bdf8">0</span></label>
-                <input type="range" id="kcX2" min="-30" max="30" value="0" step="0.5">
+            <div class="slider-row">
+                <div class="slider-col"><label>Trục Ngang (X): <span id="valX2" style="color:#38bdf8">0</span></label><input type="range" id="kcX2" min="-30" max="30" value="0" step="0.5"></div>
             </div>
         </div>
 
@@ -275,9 +276,8 @@
                 <label>Khoảng cách chữ: <span id="valSpace3" style="color:#38bdf8">13</span> px</label>
                 <input type="range" id="kcSpace3" min="13" max="18" value="13" step="1">
             </div>
-            <div class="input-group">
-                <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
-                <input type="range" id="kcX3" min="-30" max="30" value="0" step="0.5">
+            <div class="slider-row">
+                <div class="slider-col"><label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label><input type="range" id="kcX3" min="-30" max="30" value="0" step="0.5"></div>
             </div>
         </div>
 
@@ -347,7 +347,7 @@
     }
 
     const linkMontserrat = 'https://cdn.jsdelivr.net/gh/JulietaUla/Montserrat@master/fonts/ttf/Montserrat-Bold.ttf';
-    const linkTallFont = 'https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/anton/Anton-Regular.ttf'; 
+    const linkTallFont = 'https://cdn.jsdelivr.net/gh/googlefonts/anton@main/fonts/ttf/Anton-Regular.ttf'; 
 
     opentype.load(linkMontserrat, function(err, font) { if(!err) fonts2D['montserrat'] = font; checkReady(); });
     opentype.load(linkTallFont, function(err, font) { 
@@ -423,7 +423,8 @@
         const updateText = () => {
             const fontKey = inputFont.value;
             const currentFont3D = fonts3D[fontKey] || fonts3D['montserrat']; 
-            if (!currentFont3D) return;
+            const currentFont2D = fonts2D[fontKey] || fonts2D['montserrat']; 
+            if (!currentFont3D || !currentFont2D) return;
 
             const textStr = inputName.value || ' '; 
             
@@ -432,7 +433,7 @@
                 textGroup.children.forEach(child => { child.geometry.dispose(); child.material.dispose(); });
             }
 
-            const thickness = 1.8; // Cố định độ dày
+            const thickness = 1.8; 
             const spacing3D = parseFloat(inputSpace.value) * 0.08; 
             
             textGroup = new THREE.Group();
@@ -444,19 +445,24 @@
 
             for (let i = 0; i < chars.length; i++) {
                 const char = chars[i];
-                if (char === ' ') { currentX += size * 0.4 + spacing3D; continue; }
+                if (char === ' ') { 
+                    currentX += currentFont2D.getAdvanceWidth(' ', size) + spacing3D; 
+                    continue; 
+                }
 
                 const charGeo = new TextGeometry(char, { font: currentFont3D, size: size, height: thickness, curveSegments: 4, bevelEnabled: false });
-                charGeo.computeBoundingBox();
-                const charWidth = charGeo.boundingBox.max.x - charGeo.boundingBox.min.x;
                 
                 const charMesh = new THREE.Mesh(charGeo, textMat);
                 charMesh.position.x = currentX;
                 textGroup.add(charMesh);
-                currentX += charWidth + spacing3D;
+                
+                // CỐT LÕI: DÙNG ADVANCE WIDTH CỦA FONT 2D ĐỂ 3D CHUẨN KHOẢNG CÁCH NHƯ SVG
+                const advance = currentFont2D.getAdvanceWidth(char, size);
+                currentX += advance + spacing3D;
             }
 
-            const centerOffset = -0.5 * (currentX - spacing3D);
+            const totalWidth = currentX > 0 ? currentX - spacing3D : 0;
+            const centerOffset = -0.5 * totalWidth;
             const posX = parseFloat(inputX.value);
             const posY = -3; // GHIM CỨNG TRỤC Y
             const posZ = 1.5; // GHIM CỨNG TRỤC Z
@@ -465,7 +471,7 @@
             scene.add(textGroup);
         };
 
-        // LOGIC CHUYỂN FONT -> TỰ ĐỘNG ĐỔI MIN/MAX CỦA KHOẢNG CÁCH
+        // LOGIC CHUYỂN FONT -> TỰ ĐỘNG ĐỔI MIN/MAX/VALUE CỦA KHOẢNG CÁCH
         inputFont.addEventListener('change', () => {
             if (inputFont.value === 'montserrat') {
                 inputSpace.min = 13;
@@ -560,9 +566,9 @@
             formData.append(`Keychain_${i}_Tên`, keyText);
             formData.append(`Keychain_${i}_Phông_chữ`, fontName);
             formData.append(`Keychain_${i}_Loại_Cà_vạt`, modelType === 'HFM.stl' ? 'Nam (HFM)' : 'Nữ (HFF)');
-            formData.append(`Keychain_${i}_KhoảngCách`, spacing + "px"); // Báo cáo khoảng cách gửi về mail
+            formData.append(`Keychain_${i}_KhoảngCách`, spacing + "px"); 
             formData.append(`Keychain_${i}_TọaĐộ_X`, document.getElementById(`kcX${i}`).value);
-            formData.append(`Keychain_${i}_TọaĐộ_Y`, "-3"); // Đã ghim cứng ở -3
+            formData.append(`Keychain_${i}_TọaĐộ_Y`, "-3"); 
             formData.append(`Keychain_${i}_MặtPhẳng_Z`, "1.5"); 
             formData.append(`Keychain_${i}_ĐộDày`, "1.8mm");    
             formData.append(`Keychain_${i}_FileVector`, svgFile);
