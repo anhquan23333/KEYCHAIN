@@ -56,9 +56,9 @@
         .slider-row { display: flex; gap: 15px; }
         .slider-col { flex: 1; }
 
-        button { width: 100%; background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.5)); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.6); color: #111; padding: 15px; font-size: 16px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 15px;}
-        button:hover { background: rgba(255,255,255,1); transform: translateY(-2px); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        button { width: 100%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border: none; color: white; padding: 15px; font-size: 16px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-top: 15px;}
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+        button:disabled { background: #ccc; color: #666; cursor: not-allowed; box-shadow: none; }
         
         #successScreen { display: none; text-align: center; padding: 40px 20px; }
     </style>
@@ -79,7 +79,7 @@
         <div class="radio-group">
             <label><input type="radio" name="school" value="THPT Châu Văn Liêm"> THPT Châu Văn Liêm</label>
             <label><input type="radio" name="school" value="Đại học"> Đại học</label>
-            <label><input type="radio" name="school" value="THCS địa bàn TP.Cần Thơ"> THCS địa bàn TP.Cần Thơ</label>
+            <label><input type="radio" name="school" value="THCS địa bàn TP.Cần Thơ"> THCS Cần Thơ</label>
             <label><input type="radio" name="school" id="schoolOtherRadio" value="Khác"> Khác</label>
         </div>
         <input type="text" id="schoolOtherText" placeholder="Nhập tên trường..." style="display:none; margin-top:5px;">
@@ -93,9 +93,9 @@
     <div class="input-group">
         <label style="font-weight: bold;">Số lượng keychain cần đặt:</label>
         <div class="radio-group">
-            <label><input type="radio" name="quantity" value="1" checked> 1 Keychain</label>
-            <label><input type="radio" name="quantity" value="2"> 2 Keychain</label>
-            <label><input type="radio" name="quantity" value="3"> 3 Keychain</label>
+            <label><input type="radio" name="quantity" value="1" checked> 1 Món</label>
+            <label><input type="radio" name="quantity" value="2"> 2 Món</label>
+            <label><input type="radio" name="quantity" value="3"> 3 Món</label>
         </div>
     </div>
 
@@ -114,7 +114,6 @@
     
     <div class="keychain-section active" id="kcSection1">
         <h4 class="section-title">🔑 Keychain #1</h4>
-        
         <div class="input-group">
             <label>Phân loại Cà vạt:</label>
             <div class="radio-group">
@@ -122,7 +121,6 @@
                 <label><input type="radio" name="kcType1" value="HFF.stl"> Nữ (Bản nhỏ)</label>
             </div>
         </div>
-
         <div class="input-group">
             <label>Phông chữ thiết kế:</label>
             <select id="kcFont1">
@@ -130,15 +128,12 @@
                 <option value="league">League Gothic (Cao ốm)</option>
             </select>
         </div>
-
         <div class="input-group">
             <label>Tên in (Gõ dấu Tiếng Việt, Hoa/Thường tùy ý):</label>
             <input type="text" id="kcName1" placeholder="VD: Anh Quân" autocomplete="off">
         </div>
-        
         <div class="canvas-container" id="kcCanvas1"></div>
         <div class="instruction">💡 Dùng ngón tay xoay vùng xám để xem tổng thể.</div>
-        
         <div class="input-group">
             <label>Khoảng cách chữ: <span id="valSpace1">0</span> px</label>
             <input type="range" id="kcSpace1" min="-10" max="30" value="0" step="1">
@@ -151,7 +146,6 @@
 
     <div class="keychain-section" id="kcSection2">
         <h4 class="section-title">🔑 Keychain #2</h4>
-        
         <div class="input-group">
             <label>Phân loại Cà vạt:</label>
             <div class="radio-group">
@@ -159,7 +153,6 @@
                 <label><input type="radio" name="kcType2" value="HFF.stl"> Nữ (Bản nhỏ)</label>
             </div>
         </div>
-
         <div class="input-group">
             <label>Phông chữ thiết kế:</label>
             <select id="kcFont2">
@@ -167,15 +160,12 @@
                 <option value="league">League Gothic (Cao ốm)</option>
             </select>
         </div>
-
         <div class="input-group">
             <label>Tên in (Gõ dấu Tiếng Việt, Hoa/Thường tùy ý):</label>
             <input type="text" id="kcName2" placeholder="VD: Minh Anh" autocomplete="off">
         </div>
-        
         <div class="canvas-container" id="kcCanvas2"></div>
         <div class="instruction">💡 Dùng ngón tay xoay vùng xám để xem tổng thể.</div>
-        
         <div class="input-group">
             <label>Khoảng cách chữ: <span id="valSpace2">0</span> px</label>
             <input type="range" id="kcSpace2" min="-10" max="30" value="0" step="1">
@@ -188,7 +178,6 @@
 
     <div class="keychain-section" id="kcSection3">
         <h4 class="section-title">🔑 Keychain #3</h4>
-        
         <div class="input-group">
             <label>Phân loại Cà vạt:</label>
             <div class="radio-group">
@@ -196,7 +185,6 @@
                 <label><input type="radio" name="kcType3" value="HFF.stl"> Nữ (Bản nhỏ)</label>
             </div>
         </div>
-
         <div class="input-group">
             <label>Phông chữ thiết kế:</label>
             <select id="kcFont3">
@@ -204,15 +192,12 @@
                 <option value="league">League Gothic (Cao ốm)</option>
             </select>
         </div>
-
         <div class="input-group">
             <label>Tên in (Gõ dấu Tiếng Việt, Hoa/Thường tùy ý):</label>
             <input type="text" id="kcName3" placeholder="VD: Bảo Long" autocomplete="off">
         </div>
-        
         <div class="canvas-container" id="kcCanvas3"></div>
         <div class="instruction">💡 Dùng ngón tay xoay vùng xám để xem tổng thể.</div>
-        
         <div class="input-group">
             <label>Khoảng cách chữ: <span id="valSpace3">0</span> px</label>
             <input type="range" id="kcSpace3" min="-10" max="30" value="0" step="1">
@@ -239,7 +224,6 @@
     import { STLLoader } from 'three/addons/loaders/STLLoader.js';
     import { TTFLoader } from 'three/addons/loaders/TTFLoader.js';
 
-    // 1. QUẢN LÝ GIAO DIỆN CƠ BẢN
     let currentQuantity = 1;
     const submitBtn = document.getElementById('submitBtn');
     
@@ -262,41 +246,35 @@
         document.getElementById('kcSection2').classList.toggle('active', currentQuantity >= 2);
         document.getElementById('kcSection3').classList.toggle('active', currentQuantity >= 3);
 
-        setTimeout(() => {
-            viewers.forEach(v => { if(v.index <= currentQuantity) v.resize(); });
-        }, 50);
+        setTimeout(() => { viewers.forEach(v => { if(v.index <= currentQuantity) v.resize(); }); }, 50);
     }));
 
-    // 2. HỆ THỐNG TẢI FONT (Hỗ trợ Tiếng Việt & Đa Font)
+    // CƠ CHẾ TẢI FONT CHỐNG KẸT
     const fonts2D = {};
     const fonts3D = {};
     let loadedAssets = 0;
-    const totalAssets = 4; // 2 font x 2 định dạng (2D & 3D)
+    const totalAssets = 4;
 
     function checkReady() {
         loadedAssets++;
-        if (loadedAssets === totalAssets) {
+        if (loadedAssets >= totalAssets) {
             submitBtn.textContent = "Gửi Đơn Hàng & File Thiết Kế";
             submitBtn.disabled = false;
             viewers.forEach(v => v.updateText()); 
         }
     }
 
-    // Link nguồn Font chuẩn chứa full Tiếng Việt
-    const linkMontserrat = 'https://cdn.jsdelivr.net/gh/googlefonts/montserrat@main/fonts/ttf/Montserrat-Bold.ttf';
-    const linkLeague = 'https://cdn.jsdelivr.net/gh/googlefonts/league-gothic@main/fonts/ttf/LeagueGothic-Regular.ttf';
+    // Link font siêu ổn định (Oswald thay thế League Gothic để chống lỗi 404)
+    const linkMontserrat = 'https://cdn.jsdelivr.net/gh/JulietaUla/Montserrat@master/fonts/ttf/Montserrat-Bold.ttf';
+    const linkTallFont = 'https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/oswald/Oswald-Bold.ttf'; 
 
-    // Tải cho SVG 2D
-    opentype.load(linkMontserrat, function(err, font) { if (!err) { fonts2D['montserrat'] = font; checkReady(); } });
-    opentype.load(linkLeague, function(err, font) { if (!err) { fonts2D['league'] = font; checkReady(); } });
+    opentype.load(linkMontserrat, function(err, font) { if(!err) fonts2D['montserrat'] = font; checkReady(); });
+    opentype.load(linkTallFont, function(err, font) { if(!err) fonts2D['league'] = font; checkReady(); });
 
-    // Tải TTF chuyển sang dữ liệu 3D
     const ttfLoader = new TTFLoader();
-    ttfLoader.load(linkMontserrat, function (json) { fonts3D['montserrat'] = new FontLoader().parse(json); checkReady(); });
-    ttfLoader.load(linkLeague, function (json) { fonts3D['league'] = new FontLoader().parse(json); checkReady(); });
+    ttfLoader.load(linkMontserrat, function (json) { fonts3D['montserrat'] = new FontLoader().parse(json); checkReady(); }, undefined, function(){ checkReady(); });
+    ttfLoader.load(linkTallFont, function (json) { fonts3D['league'] = new FontLoader().parse(json); checkReady(); }, undefined, function(){ checkReady(); });
 
-
-    // 3. XÂY DỰNG NHÀ MÁY (FACTORY) TẠO MÔI TRƯỜNG 3D
     const viewers = [];
     
     function initViewer(index) {
@@ -324,7 +302,6 @@
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
 
-        // Logic tải Mô hình STL (Cà vạt Nam/Nữ)
         let baseMesh = null;
         const stlLoader = new STLLoader();
 
@@ -334,7 +311,6 @@
                 baseMesh.geometry.dispose();
                 baseMesh.material.dispose();
             }
-
             stlLoader.load(filename, function (geometry) {
                 geometry.computeBoundingBox();
                 const center = new THREE.Vector3();
@@ -343,19 +319,14 @@
 
                 const stlMaterial = new THREE.MeshStandardMaterial({ color: 0x87CEFA, roughness: 0.5, metalness: 0.1 });
                 baseMesh = new THREE.Mesh(geometry, stlMaterial);
-                
-                baseMesh.scale.set(1.5, 1.5, 1.5); // CỐ ĐỊNH SCALE 1.5 CHO MÔ HÌNH
+                baseMesh.scale.set(1.5, 1.5, 1.5); 
                 scene.add(baseMesh);
-            }, undefined, function (error) {
-                console.error(`Không tìm thấy file ${filename}. Hãy đảm bảo đã up lên Github!`);
-            });
+            }, undefined, function() {});
         };
 
-        // Lấy giá trị radio ban đầu để load Model
         const initialModel = document.querySelector(`input[name="kcType${index}"]:checked`).value;
         loadBaseModel(initialModel);
 
-        // Lắng nghe đổi Nam/Nữ
         document.getElementsByName(`kcType${index}`).forEach(r => r.addEventListener('change', (e) => {
             loadBaseModel(e.target.value);
         }));
@@ -367,7 +338,6 @@
             const currentFont3D = fonts3D[fontKey];
             if (!currentFont3D) return;
 
-            // Khắc phục lỗi tiếng việt bằng cách lấy nguyên gốc chuỗi và tách theo chuẩn NFC
             const textStr = inputName.value || ' '; 
             
             if (textGroup) {
@@ -375,15 +345,13 @@
                 textGroup.children.forEach(child => { child.geometry.dispose(); child.material.dispose(); });
             }
 
-            const thickness = 1.8; // GHIM CỨNG ĐỘ DÀY
+            const thickness = 1.8; 
             const spacing3D = parseFloat(inputSpace.value) * 0.08; 
             
             textGroup = new THREE.Group();
             const textMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.7, roughness: 0.2 });
             
             let currentX = 0; const size = 8;
-
-            // Sử dụng Array.from để tách chuỗi an toàn với các ký tự Tiếng Việt Unicode
             const chars = Array.from(textStr.normalize('NFC'));
 
             for (let i = 0; i < chars.length; i++) {
@@ -403,13 +371,12 @@
             const centerOffset = -0.5 * (currentX - spacing3D);
             const posX = parseFloat(inputX.value);
             const posY = parseFloat(inputY.value);
-            const posZ = 1.5; // GHIM CỨNG TRỤC Z
+            const posZ = 1.5; 
             
             textGroup.position.set(centerOffset + posX, posY, posZ); 
             scene.add(textGroup);
         };
 
-        // Lắng nghe thay đổi Chữ, Font và Tọa độ
         inputName.addEventListener('input', updateText);
         inputFont.addEventListener('change', updateText);
         inputSpace.addEventListener('input', () => { document.getElementById(`valSpace${index}`).textContent = inputSpace.value; updateText(); });
@@ -441,16 +408,13 @@
     }
     animate();
 
-    // 4. HỆ THỐNG GỬI EMAIL VÀ SVG CÓ HỖ TRỢ TIẾNG VIỆT
     submitBtn.addEventListener('click', () => {
         const nameVal = document.getElementById('fullName').value.trim();
         if (!nameVal) { alert('Vui lòng điền Họ Tên!'); return; }
         if (!document.getElementById('paymentProof').files[0]) { alert("Vui lòng tải lên ảnh bill chuyển khoản!"); return; }
 
         for(let i=1; i<=currentQuantity; i++) {
-            if(!document.getElementById(`kcName${i}`).value.trim()) {
-                alert(`Vui lòng nhập Tên in cho Keychain #${i}`); return;
-            }
+            if(!document.getElementById(`kcName${i}`).value.trim()) { alert(`Vui lòng nhập Tên in cho Keychain #${i}`); return; }
         }
 
         submitBtn.textContent = "Hệ thống đang xử lý thiết kế..."; submitBtn.disabled = true;
@@ -473,7 +437,6 @@
             const font2D = fonts2D[fontKey];
             const spacing = parseFloat(document.getElementById(`kcSpace${i}`).value);
             
-            // Xử lý an toàn mảng Tiếng Việt Unicode cho SVG 2D
             let path = new opentype.Path();
             let x = 0; const y = 100;
             const chars = Array.from(keyText.normalize('NFC'));
@@ -489,13 +452,12 @@
             const bb = path.getBoundingBox();
             const svgContent = `<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" width="${bb.x2-bb.x1+20}" height="${bb.y2-bb.y1+20}" viewBox="${bb.x1-10} ${bb.y1-10} ${bb.x2-bb.x1+20} ${bb.y2-bb.y1+20}"><path d="${path.toPathData()}" fill="black" /></svg>`;
             
-            // Đặt tên file đính kèm chuẩn hóa chống lỗi dấu
             const safeFileName = `Keychain_${i}_Vector.svg`;
             const svgFile = new File([new Blob([svgContent], { type: 'image/svg+xml' })], safeFileName, { type: 'image/svg+xml' });
 
             formData.append(`Keychain_${i}_Tên`, keyText);
             formData.append(`Keychain_${i}_Phông_chữ`, fontName);
-            formData.append(`Keychain_${i}_Loại_Cà_vạt`, modelType === 'HFM.stl' ? 'Cà vạt Nam (HFM)' : 'Cà vạt Nữ (HFF)');
+            formData.append(`Keychain_${i}_Loại_Cà_vạt`, modelType === 'HFM.stl' ? 'Nam (HFM)' : 'Nữ (HFF)');
             formData.append(`Keychain_${i}_TọaĐộ_X`, document.getElementById(`kcX${i}`).value);
             formData.append(`Keychain_${i}_TọaĐộ_Y`, document.getElementById(`kcY${i}`).value);
             formData.append(`Keychain_${i}_MặtPhẳng_Z`, "1.5"); 
@@ -503,7 +465,6 @@
             formData.append(`Keychain_${i}_FileVector`, svgFile);
         }
 
-        // THAY EMAIL CỦA BẠN VÀO ĐÂY
         fetch("https://formsubmit.co/ajax/EMAIL_CUA_BAN@gmail.com", { method: "POST", body: formData })
         .then(() => {
             document.getElementById('formScreen').style.display = 'none';
