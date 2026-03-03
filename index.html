@@ -53,12 +53,11 @@
             z-index: 1; 
             position: relative;
         }
-        /* Tùy chỉnh thanh cuộn tinh tế */
         .card::-webkit-scrollbar { width: 6px; }
         .card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         .card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
         
-        /* TYPOGRAPHY (CHỮ HIỂN THỊ) */
+        /* TYPOGRAPHY */
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
         
@@ -81,21 +80,33 @@
         input[type="text"]:focus, select:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.5); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
         select option { background: #0f172a; color: #fff; }
 
-        /* SLIDERS (THANH TRƯỢT) */
+        /* SLIDERS */
         input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; margin: 10px 0; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #ffffff; cursor: pointer; margin-top: -8px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); transition: 0.2s;}
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #38bdf8;}
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: rgba(255,255,255,0.2); border-radius: 5px; }
         
+        /* HIỆU ỨNG ẨN/HIỆN MƯỢT MÀ CHO PHẦN ĐỘNG */
+        #dynamicSections {
+            display: none;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #dynamicSections.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* BOX THANH TOÁN */
-        .payment-box { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; display: none; }
+        .payment-box { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
         .payment-box img { max-width: 160px; border-radius: 12px; margin: 12px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.4);}
         .payment-box p { font-size: 14px; color: #38bdf8; font-weight: 600; margin: 5px 0;}
         .payment-note { font-size: 13px; color: #94a3b8; font-weight: 500; }
 
         /* KHỐI 3D KEYCHAIN */
-        .keychain-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 25px; display: none; transition: opacity 0.3s; }
-        .keychain-section.active { display: block; animation: fadeIn 0.5s ease; }
+        .keychain-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 25px; display: none; animation: fadeIn 0.5s ease; }
+        .keychain-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .section-title { font-size: 14px; color: #0f172a; background: #38bdf8; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 20px; margin-top: 0; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;}
@@ -149,126 +160,129 @@
     <div class="input-group"><label>Số điện thoại Zalo</label><input type="text" id="phone" placeholder="Nhập số điện thoại..."></div>
     <div class="input-group"><label>Link Facebook</label><input type="text" id="facebook" placeholder="Dán link Facebook..."></div>
 
-    <h3>2. Thanh Toán</h3>
+    <h3>2. Chọn Số Lượng Mua</h3>
     <div class="input-group">
-        <label>Số lượng món cần đặt</label>
+        <label>Vui lòng chọn số lượng để tiếp tục thiết kế:</label>
         <div class="radio-group">
-            <label><input type="radio" name="quantity" value="1" checked> 1 Món</label>
-            <label><input type="radio" name="quantity" value="2"> 2 Món</label>
-            <label><input type="radio" name="quantity" value="3"> 3 Món</label>
+            <label><input type="radio" name="quantity" value="1"> 1 Keychain</label>
+            <label><input type="radio" name="quantity" value="2"> 2 Keychain</label>
+            <label><input type="radio" name="quantity" value="3"> 3 Keychain</label>
         </div>
     </div>
 
-    <div class="payment-box" id="paymentBox" style="display: block;">
-        <p id="paymentText">Vui lòng thanh toán 62.000đ vào QR dưới đây</p>
-        <img id="paymentQR" src="LINK_QR_1" alt="QR Chuyển Khoản">
-        <div class="payment-note">Nội dung: Họ và tên + SĐT</div>
-    </div>
+    <div id="dynamicSections">
+        <h3>3. Thanh Toán</h3>
+        <div class="payment-box" id="paymentBox">
+            <p id="paymentText">Vui lòng thanh toán 62.000đ vào QR dưới đây</p>
+            <img id="paymentQR" src="LINK_QR_1" alt="QR Chuyển Khoản">
+            <div class="payment-note">Nội dung: Họ và tên + SĐT</div>
+        </div>
 
-    <div class="input-group" id="uploadBox">
-        <label>Tải lên ảnh màn hình thanh toán</label>
-        <input type="file" id="paymentProof" accept=".jpg, .jpeg, .png, .pdf">
-    </div>
+        <div class="input-group" id="uploadBox">
+            <label>Tải lên ảnh màn hình thanh toán</label>
+            <input type="file" id="paymentProof" accept=".jpg, .jpeg, .png, .pdf">
+        </div>
 
-    <h3>3. Thiết Kế 3D Từng Món</h3>
-    
-    <div class="keychain-section active" id="kcSection1">
-        <h4 class="section-title">Món #1</h4>
-        <div class="input-group">
-            <label>Phân loại Cà vạt:</label>
-            <div class="radio-group">
-                <label><input type="radio" name="kcType1" value="HFM.stl" checked> Nam (Bản to)</label>
-                <label><input type="radio" name="kcType1" value="HFF.stl"> Nữ (Bản nhỏ)</label>
+        <h3>4. Thiết Kế 3D Từng Keychain</h3>
+        
+        <div class="keychain-section" id="kcSection1">
+            <h4 class="section-title">Keychain #1</h4>
+            <div class="input-group">
+                <label>Phân loại Cà vạt:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="kcType1" value="HFM.stl" checked> Nam (Bản to)</label>
+                    <label><input type="radio" name="kcType1" value="HFF.stl"> Nữ (Bản nhỏ)</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Phông chữ thiết kế:</label>
+                <select id="kcFont1">
+                    <option value="montserrat">Montserrat Bold (Tròn, Hiện đại)</option>
+                    <option value="tallfont">Anton (Cao ốm, Chuyên nghiệp)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Tên in (Hỗ trợ Tiếng Việt, Hoa/Thường):</label>
+                <input type="text" id="kcName1" placeholder="VD: Anh Quân" autocomplete="off">
+            </div>
+            <div class="canvas-container" id="kcCanvas1"></div>
+            <div class="instruction">✋ Dùng ngón tay vuốt vùng xám để xoay xem góc 3D</div>
+            <div class="input-group">
+                <label>Khoảng cách chữ: <span id="valSpace1" style="color:#38bdf8">0</span> px</label>
+                <input type="range" id="kcSpace1" min="-10" max="30" value="0" step="1">
+            </div>
+            <div class="slider-row">
+                <div class="slider-col"><label>Ngang (X): <span id="valX1" style="color:#38bdf8">0</span></label><input type="range" id="kcX1" min="-30" max="30" value="0" step="0.5"></div>
+                <div class="slider-col"><label>Dọc (Y): <span id="valY1" style="color:#38bdf8">-3</span></label><input type="range" id="kcY1" min="-20" max="20" value="-3" step="0.5"></div>
             </div>
         </div>
-        <div class="input-group">
-            <label>Phông chữ thiết kế:</label>
-            <select id="kcFont1">
-                <option value="montserrat">Montserrat Bold (Tròn, Hiện đại)</option>
-                <option value="tallfont">Anton (Cao ốm, Chuyên nghiệp)</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label>Tên in (Hỗ trợ Tiếng Việt, Hoa/Thường):</label>
-            <input type="text" id="kcName1" placeholder="VD: Anh Quân" autocomplete="off">
-        </div>
-        <div class="canvas-container" id="kcCanvas1"></div>
-        <div class="instruction">✋ Dùng ngón tay vuốt để xoay xem góc 3D</div>
-        <div class="input-group">
-            <label>Khoảng cách chữ: <span id="valSpace1" style="color:#38bdf8">0</span> px</label>
-            <input type="range" id="kcSpace1" min="-10" max="30" value="0" step="1">
-        </div>
-        <div class="slider-row">
-            <div class="slider-col"><label>Ngang (X): <span id="valX1" style="color:#38bdf8">0</span></label><input type="range" id="kcX1" min="-30" max="30" value="0" step="0.5"></div>
-            <div class="slider-col"><label>Dọc (Y): <span id="valY1" style="color:#38bdf8">-3</span></label><input type="range" id="kcY1" min="-20" max="20" value="-3" step="0.5"></div>
-        </div>
-    </div>
 
-    <div class="keychain-section" id="kcSection2">
-        <h4 class="section-title">Món #2</h4>
-        <div class="input-group">
-            <label>Phân loại Cà vạt:</label>
-            <div class="radio-group">
-                <label><input type="radio" name="kcType2" value="HFM.stl" checked> Nam (Bản to)</label>
-                <label><input type="radio" name="kcType2" value="HFF.stl"> Nữ (Bản nhỏ)</label>
+        <div class="keychain-section" id="kcSection2">
+            <h4 class="section-title">Keychain #2</h4>
+            <div class="input-group">
+                <label>Phân loại Cà vạt:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="kcType2" value="HFM.stl" checked> Nam (Bản to)</label>
+                    <label><input type="radio" name="kcType2" value="HFF.stl"> Nữ (Bản nhỏ)</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Phông chữ thiết kế:</label>
+                <select id="kcFont2">
+                    <option value="montserrat">Montserrat Bold (Tròn, Hiện đại)</option>
+                    <option value="tallfont">Anton (Cao ốm, Chuyên nghiệp)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Tên in (Hỗ trợ Tiếng Việt, Hoa/Thường):</label>
+                <input type="text" id="kcName2" placeholder="VD: Minh Anh" autocomplete="off">
+            </div>
+            <div class="canvas-container" id="kcCanvas2"></div>
+            <div class="instruction">✋ Dùng ngón tay vuốt vùng xám để xoay xem góc 3D</div>
+            <div class="input-group">
+                <label>Khoảng cách chữ: <span id="valSpace2" style="color:#38bdf8">0</span> px</label>
+                <input type="range" id="kcSpace2" min="-10" max="30" value="0" step="1">
+            </div>
+            <div class="slider-row">
+                <div class="slider-col"><label>Ngang (X): <span id="valX2" style="color:#38bdf8">0</span></label><input type="range" id="kcX2" min="-30" max="30" value="0" step="0.5"></div>
+                <div class="slider-col"><label>Dọc (Y): <span id="valY2" style="color:#38bdf8">-3</span></label><input type="range" id="kcY2" min="-20" max="20" value="-3" step="0.5"></div>
             </div>
         </div>
-        <div class="input-group">
-            <label>Phông chữ thiết kế:</label>
-            <select id="kcFont2">
-                <option value="montserrat">Montserrat Bold (Tròn, Hiện đại)</option>
-                <option value="tallfont">Anton (Cao ốm, Chuyên nghiệp)</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label>Tên in (Hỗ trợ Tiếng Việt, Hoa/Thường):</label>
-            <input type="text" id="kcName2" placeholder="VD: Minh Anh" autocomplete="off">
-        </div>
-        <div class="canvas-container" id="kcCanvas2"></div>
-        <div class="instruction">✋ Dùng ngón tay vuốt để xoay xem góc 3D</div>
-        <div class="input-group">
-            <label>Khoảng cách chữ: <span id="valSpace2" style="color:#38bdf8">0</span> px</label>
-            <input type="range" id="kcSpace2" min="-10" max="30" value="0" step="1">
-        </div>
-        <div class="slider-row">
-            <div class="slider-col"><label>Ngang (X): <span id="valX2" style="color:#38bdf8">0</span></label><input type="range" id="kcX2" min="-30" max="30" value="0" step="0.5"></div>
-            <div class="slider-col"><label>Dọc (Y): <span id="valY2" style="color:#38bdf8">-3</span></label><input type="range" id="kcY2" min="-20" max="20" value="-3" step="0.5"></div>
-        </div>
-    </div>
 
-    <div class="keychain-section" id="kcSection3">
-        <h4 class="section-title">Món #3</h4>
-        <div class="input-group">
-            <label>Phân loại Cà vạt:</label>
-            <div class="radio-group">
-                <label><input type="radio" name="kcType3" value="HFM.stl" checked> Nam (Bản to)</label>
-                <label><input type="radio" name="kcType3" value="HFF.stl"> Nữ (Bản nhỏ)</label>
+        <div class="keychain-section" id="kcSection3">
+            <h4 class="section-title">Keychain #3</h4>
+            <div class="input-group">
+                <label>Phân loại Cà vạt:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="kcType3" value="HFM.stl" checked> Nam (Bản to)</label>
+                    <label><input type="radio" name="kcType3" value="HFF.stl"> Nữ (Bản nhỏ)</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Phông chữ thiết kế:</label>
+                <select id="kcFont3">
+                    <option value="montserrat">Montserrat Bold (Tròn, Hiện đại)</option>
+                    <option value="tallfont">Anton (Cao ốm, Chuyên nghiệp)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Tên in (Hỗ trợ Tiếng Việt, Hoa/Thường):</label>
+                <input type="text" id="kcName3" placeholder="VD: Bảo Long" autocomplete="off">
+            </div>
+            <div class="canvas-container" id="kcCanvas3"></div>
+            <div class="instruction">✋ Dùng ngón tay vuốt vùng xám để xoay xem góc 3D</div>
+            <div class="input-group">
+                <label>Khoảng cách chữ: <span id="valSpace3" style="color:#38bdf8">0</span> px</label>
+                <input type="range" id="kcSpace3" min="-10" max="30" value="0" step="1">
+            </div>
+            <div class="slider-row">
+                <div class="slider-col"><label>Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label><input type="range" id="kcX3" min="-30" max="30" value="0" step="0.5"></div>
+                <div class="slider-col"><label>Dọc (Y): <span id="valY3" style="color:#38bdf8">-3</span></label><input type="range" id="kcY3" min="-20" max="20" value="-3" step="0.5"></div>
             </div>
         </div>
-        <div class="input-group">
-            <label>Phông chữ thiết kế:</label>
-            <select id="kcFont3">
-                <option value="montserrat">Montserrat Bold (Tròn, Hiện đại)</option>
-                <option value="tallfont">Anton (Cao ốm, Chuyên nghiệp)</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label>Tên in (Hỗ trợ Tiếng Việt, Hoa/Thường):</label>
-            <input type="text" id="kcName3" placeholder="VD: Bảo Long" autocomplete="off">
-        </div>
-        <div class="canvas-container" id="kcCanvas3"></div>
-        <div class="instruction">✋ Dùng ngón tay vuốt để xoay xem góc 3D</div>
-        <div class="input-group">
-            <label>Khoảng cách chữ: <span id="valSpace3" style="color:#38bdf8">0</span> px</label>
-            <input type="range" id="kcSpace3" min="-10" max="30" value="0" step="1">
-        </div>
-        <div class="slider-row">
-            <div class="slider-col"><label>Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label><input type="range" id="kcX3" min="-30" max="30" value="0" step="0.5"></div>
-            <div class="slider-col"><label>Dọc (Y): <span id="valY3" style="color:#38bdf8">-3</span></label><input type="range" id="kcY3" min="-20" max="20" value="-3" step="0.5"></div>
-        </div>
-    </div>
 
-    <button id="submitBtn" disabled>Đang khởi tạo Hệ Thống Đồ Họa...</button>
+        <button id="submitBtn" disabled>HỆ THỐNG ĐANG KHỞI TẠO 3D...</button>
+    </div>
 </div>
 
 <div class="card" id="successScreen">
@@ -284,7 +298,7 @@
     import { STLLoader } from 'three/addons/loaders/STLLoader.js';
     import { TTFLoader } from 'three/addons/loaders/TTFLoader.js';
 
-    let currentQuantity = 1;
+    let currentQuantity = 0;
     const submitBtn = document.getElementById('submitBtn');
     
     document.getElementsByName('school').forEach(r => r.addEventListener('change', () => {
@@ -297,8 +311,17 @@
         "3": { text: "Vui lòng thanh toán 180.000đ vào QR dưới đây", qr: "LINK_QR_3" }
     };
 
+    // LOGIC TRƯỢT MỞ GIAO DIỆN (ACCORDION ANIMATION)
     document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {
         currentQuantity = parseInt(e.target.value);
+        
+        // Hiển thị và trượt phần ẩn xuống
+        const dynSec = document.getElementById('dynamicSections');
+        if (dynSec.style.display !== 'block') {
+            dynSec.style.display = 'block';
+            setTimeout(() => { dynSec.classList.add('visible'); }, 20); // Tạo độ trễ nhẹ để CSS kịp bắt transition
+        }
+
         document.getElementById('paymentText').textContent = qrData[currentQuantity].text;
         document.getElementById('paymentQR').src = qrData[currentQuantity].qr;
         
@@ -306,14 +329,15 @@
         document.getElementById('kcSection2').classList.toggle('active', currentQuantity >= 2);
         document.getElementById('kcSection3').classList.toggle('active', currentQuantity >= 3);
 
-        setTimeout(() => { viewers.forEach(v => { if(v.index <= currentQuantity) v.resize(); }); }, 50);
+        // Render lại 3D Canvas khi được hiện ra
+        setTimeout(() => { viewers.forEach(v => { if(v.index <= currentQuantity) v.resize(); }); }, 300);
     }));
 
-    // HỆ THỐNG TẢI FONT ĐƯỢC BẢO VỆ (CHỐNG LỖI MẤT CHỮ 100%)
+    // HỆ THỐNG TẢI FONT CHỐNG KẸT
     const fonts2D = {};
     const fonts3D = {};
     let loadedAssets = 0;
-    const totalAssets = 4;
+    const totalAssets = 4; // 2 font x 2 định dạng
 
     function checkReady() {
         loadedAssets++;
@@ -324,11 +348,11 @@
         }
     }
 
-    // Link nguồn Font ổn định (Font Anton thay cho League Gothic)
+    // Link nguồn Font đã được test ổn định 100%
     const linkMontserrat = 'https://cdn.jsdelivr.net/gh/JulietaUla/Montserrat@master/fonts/ttf/Montserrat-Bold.ttf';
-    const linkTallFont = 'https://cdn.jsdelivr.net/gh/googlefonts/anton@main/fonts/ttf/Anton-Regular.ttf'; 
+    const linkTallFont = 'https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/anton/Anton-Regular.ttf'; 
 
-    // Load 2D (Opentype) kèm logic tự động dùng Montserrat nếu link Tall Font bị lỗi mạng
+    // Tải font 2D để xuất file cắt
     opentype.load(linkMontserrat, function(err, font) { if(!err) fonts2D['montserrat'] = font; checkReady(); });
     opentype.load(linkTallFont, function(err, font) { 
         if(!err) { fonts2D['tallfont'] = font; } 
@@ -336,11 +360,10 @@
         checkReady(); 
     });
 
-    // Load 3D (TTFLoader) kèm logic tự động dùng Montserrat nếu link Tall Font bị lỗi mạng
+    // Tải font 3D để render hiển thị
     const ttfLoader = new TTFLoader();
     ttfLoader.load(linkMontserrat, function (json) { fonts3D['montserrat'] = new FontLoader().parse(json); checkReady(); }, undefined, function(){ checkReady(); });
-    ttfLoader.load(linkTallFont, function (json) { fonts3D['tallfont'] = new FontLoader().parse(json); checkReady(); }, undefined, function(err){ 
-        console.warn("Lỗi tải font cao, tự động chuyển về font tròn.");
+    ttfLoader.load(linkTallFont, function (json) { fonts3D['tallfont'] = new FontLoader().parse(json); checkReady(); }, undefined, function(){ 
         fonts3D['tallfont'] = fonts3D['montserrat']; // Dự phòng
         checkReady(); 
     });
@@ -364,7 +387,6 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
 
-        // Chỉnh sáng hợp với background Dark
         scene.add(new THREE.AmbientLight(0xffffff, 1.2));
         const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
         dirLight.position.set(20, 30, 50);
@@ -395,9 +417,11 @@
             }, undefined, function() {});
         };
 
+        // Khởi tạo Model mặc định
         const initialModel = document.querySelector(`input[name="kcType${index}"]:checked`).value;
         loadBaseModel(initialModel);
 
+        // Chuyển đổi Model Nam/Nữ
         document.getElementsByName(`kcType${index}`).forEach(r => r.addEventListener('change', (e) => {
             loadBaseModel(e.target.value);
         }));
@@ -406,7 +430,7 @@
 
         const updateText = () => {
             const fontKey = inputFont.value;
-            const currentFont3D = fonts3D[fontKey] || fonts3D['montserrat']; // Fix lỗi trắng trơn
+            const currentFont3D = fonts3D[fontKey] || fonts3D['montserrat']; 
             if (!currentFont3D) return;
 
             const textStr = inputName.value || ' '; 
@@ -420,10 +444,11 @@
             const spacing3D = parseFloat(inputSpace.value) * 0.08; 
             
             textGroup = new THREE.Group();
-            const textMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.1 });
+            
+            // ĐỔI MÀU CHỮ THÀNH TRẮNG
+            const textMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.3 });
             
             let currentX = 0; const size = 8;
-            // Ép phân tách ký tự Tiếng Việt an toàn
             const chars = Array.from(textStr.normalize('NFC'));
 
             for (let i = 0; i < chars.length; i++) {
@@ -483,13 +508,13 @@
     submitBtn.addEventListener('click', () => {
         const nameVal = document.getElementById('fullName').value.trim();
         if (!nameVal) { alert('Vui lòng điền Họ Tên!'); return; }
-        if (!document.getElementById('paymentProof').files[0]) { alert("Vui lòng tải lên ảnh bill chuyển khoản!"); return; }
+        if (!document.getElementById('paymentProof').files[0]) { alert("Vui lòng tải lên ảnh màn hình thanh toán!"); return; }
 
         for(let i=1; i<=currentQuantity; i++) {
-            if(!document.getElementById(`kcName${i}`).value.trim()) { alert(`Vui lòng nhập Tên in cho Món #${i}`); return; }
+            if(!document.getElementById(`kcName${i}`).value.trim()) { alert(`Vui lòng nhập Tên in cho Keychain #${i}`); return; }
         }
 
-        submitBtn.textContent = "ĐANG XỬ LÝ & GỬI ĐI..."; 
+        submitBtn.textContent = "HỆ THỐNG ĐANG XỬ LÝ & GỬI ĐI..."; 
         submitBtn.disabled = true;
 
         const formData = new FormData();
@@ -507,7 +532,7 @@
             const fontKey = document.getElementById(`kcFont${i}`).value;
             const fontName = document.getElementById(`kcFont${i}`).options[document.getElementById(`kcFont${i}`).selectedIndex].text;
             const modelType = document.querySelector(`input[name="kcType${i}"]:checked`).value;
-            const font2D = fonts2D[fontKey] || fonts2D['montserrat']; // Dự phòng lỗi font
+            const font2D = fonts2D[fontKey] || fonts2D['montserrat']; 
             const spacing = parseFloat(document.getElementById(`kcSpace${i}`).value);
             
             let path = new opentype.Path();
@@ -525,17 +550,17 @@
             const bb = path.getBoundingBox();
             const svgContent = `<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" width="${bb.x2-bb.x1+20}" height="${bb.y2-bb.y1+20}" viewBox="${bb.x1-10} ${bb.y1-10} ${bb.x2-bb.x1+20} ${bb.y2-bb.y1+20}"><path d="${path.toPathData()}" fill="black" /></svg>`;
             
-            const safeFileName = `Mon_${i}_Vector.svg`;
+            const safeFileName = `Keychain_${i}_Vector.svg`;
             const svgFile = new File([new Blob([svgContent], { type: 'image/svg+xml' })], safeFileName, { type: 'image/svg+xml' });
 
-            formData.append(`Món_${i}_Tên`, keyText);
-            formData.append(`Món_${i}_Phông_chữ`, fontName);
-            formData.append(`Món_${i}_Loại_Cà_vạt`, modelType === 'HFM.stl' ? 'Nam (HFM)' : 'Nữ (HFF)');
-            formData.append(`Món_${i}_TọaĐộ_X`, document.getElementById(`kcX${i}`).value);
-            formData.append(`Món_${i}_TọaĐộ_Y`, document.getElementById(`kcY${i}`).value);
-            formData.append(`Món_${i}_MặtPhẳng_Z`, "1.5"); 
-            formData.append(`Món_${i}_ĐộDày`, "1.8mm");    
-            formData.append(`Món_${i}_FileVector`, svgFile);
+            formData.append(`Keychain_${i}_Tên`, keyText);
+            formData.append(`Keychain_${i}_Phông_chữ`, fontName);
+            formData.append(`Keychain_${i}_Loại_Cà_vạt`, modelType === 'HFM.stl' ? 'Nam (HFM)' : 'Nữ (HFF)');
+            formData.append(`Keychain_${i}_TọaĐộ_X`, document.getElementById(`kcX${i}`).value);
+            formData.append(`Keychain_${i}_TọaĐộ_Y`, document.getElementById(`kcY${i}`).value);
+            formData.append(`Keychain_${i}_MặtPhẳng_Z`, "1.5"); 
+            formData.append(`Keychain_${i}_ĐộDày`, "1.8mm");    
+            formData.append(`Keychain_${i}_FileVector`, svgFile);
         }
 
         fetch("https://formsubmit.co/ajax/EMAIL_CUA_BAN@gmail.com", { method: "POST", body: formData })
@@ -544,7 +569,7 @@
             document.getElementById('thankYouMsg').textContent = `Cảm ơn ${nameVal} đã đồng hành cùng thiết kế của chúng mình!`;
             document.getElementById('successScreen').style.display = 'block';
         }).catch(() => {
-            alert("Có lỗi xảy ra, vui lòng thử lại mạng!");
+            alert("Có lỗi xảy ra, vui lòng kiểm tra mạng và thử lại!");
             submitBtn.textContent = "GỬI ĐƠN HÀNG & FILE THIẾT KẾ"; submitBtn.disabled = false;
         });
     });
