@@ -474,13 +474,13 @@
         // LOGIC CHUYỂN FONT -> TỰ ĐỘNG ĐỔI MIN/MAX/VALUE CỦA KHOẢNG CÁCH
         inputFont.addEventListener('change', () => {
             if (inputFont.value === 'montserrat') {
-                inputSpace.min = 13;
-                inputSpace.max = 18;
-                inputSpace.value = 13;
+                inputSpace.min = 15;
+                inputSpace.max = 24;
+                inputSpace.value = 15;
             } else {
-                inputSpace.min = 7;
-                inputSpace.max = 14;
-                inputSpace.value = 7;
+                inputSpace.min = 14;
+                inputSpace.max = 28;
+                inputSpace.value = 14;
             }
             document.getElementById(`valSpace${index}`).textContent = inputSpace.value;
             updateText();
