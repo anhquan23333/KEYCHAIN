@@ -185,6 +185,11 @@
             <div class="instruction">✋ Dùng ngón tay vuốt vùng xám để xoay xem góc 3D</div>
             
             <div class="input-group">
+                <label>Kích thước chữ (Scale): <span id="valScale1" style="color:#38bdf8">8</span></label>
+                <input type="range" id="kcScale1" min="4" max="12" value="8" step="0.5">
+            </div>
+
+            <div class="input-group">
                 <label>Khoảng cách chữ: <span id="valSpace1" style="color:#38bdf8">18</span> px</label>
                 <input type="range" id="kcSpace1" min="13" max="28" value="18" step="1">
             </div>
@@ -217,6 +222,11 @@
             <div class="instruction">✋ Dùng ngón tay vuốt vùng xám để xoay xem góc 3D</div>
             
             <div class="input-group">
+                <label>Kích thước chữ (Scale): <span id="valScale2" style="color:#38bdf8">8</span></label>
+                <input type="range" id="kcScale2" min="4" max="12" value="8" step="0.5">
+            </div>
+
+            <div class="input-group">
                 <label>Khoảng cách chữ: <span id="valSpace2" style="color:#38bdf8">18</span> px</label>
                 <input type="range" id="kcSpace2" min="13" max="28" value="18" step="1">
             </div>
@@ -248,6 +258,11 @@
             <div class="canvas-container" id="kcCanvas3"></div>
             <div class="instruction">✋ Dùng ngón tay vuốt vùng xám để xoay xem góc 3D</div>
             
+            <div class="input-group">
+                <label>Kích thước chữ (Scale): <span id="valScale3" style="color:#38bdf8">8</span></label>
+                <input type="range" id="kcScale3" min="4" max="12" value="8" step="0.5">
+            </div>
+
             <div class="input-group">
                 <label>Khoảng cách chữ: <span id="valSpace3" style="color:#38bdf8">18</span> px</label>
                 <input type="range" id="kcSpace3" min="13" max="28" value="18" step="1">
@@ -343,6 +358,7 @@
         const container = document.getElementById(`kcCanvas${index}`);
         const inputName = document.getElementById(`kcName${index}`);
         const inputFont = document.getElementById(`kcFont${index}`);
+        const inputScale = document.getElementById(`kcScale${index}`); // Slider Kích thước
         const inputSpace = document.getElementById(`kcSpace${index}`);
         const inputX = document.getElementById(`kcX${index}`);
 
@@ -380,7 +396,7 @@
 
                 const stlMaterial = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.3, metalness: 0.2 });
                 baseMesh = new THREE.Mesh(geometry, stlMaterial);
-                baseMesh.scale.set(2.9, 2.9, 2.9); 
+                baseMesh.scale.set(1.5, 1.5, 1.5); 
                 scene.add(baseMesh);
             }, undefined, function() {});
         };
@@ -397,7 +413,8 @@
         const updateText = () => {
             const fontKey = inputFont.value;
             const currentFont3D = fonts3D[fontKey] || fonts3D['montserrat']; 
-            if (!currentFont3D) return;
+            const currentFont2D = fonts2D[fontKey] || fonts2D['montserrat']; 
+            if (!currentFont3D || !currentFont2D) return;
 
             const textStr = inputName.value || ' '; 
             
@@ -407,23 +424,25 @@
             }
 
             const thickness = 1.8; 
-            const spacing3D = parseFloat(inputSpace.value) * 0.08; 
+            const size = parseFloat(inputScale.value); // Gọi biến Kích Thước Chữ từ thanh trượt
+            
+            // Chuyển đổi khoảng cách tỷ lệ thuận với kích thước để 3D và 2D khớp nhau
+            const scaleRatio = size / 100;
+            const spacing3D = parseFloat(inputSpace.value) * scaleRatio; 
             
             textGroup = new THREE.Group();
-            
             const textMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.3 });
             
-            let currentX = 0; const size = 8;
+            let currentX = 0; 
             const chars = Array.from(textStr.normalize('NFC'));
 
             for (let i = 0; i < chars.length; i++) {
                 const char = chars[i];
                 if (char === ' ') { 
-                    currentX += size * 0.4 + spacing3D; 
+                    currentX += currentFont2D.getAdvanceWidth(' ', size) + spacing3D; 
                     continue; 
                 }
 
-                // CỐT LÕI: Tính toán dựa trên khung viền vật lý Bounding Box thay vì advanceWidth lỗi thời
                 const charGeo = new TextGeometry(char, { font: currentFont3D, size: size, height: thickness, curveSegments: 4, bevelEnabled: false });
                 charGeo.computeBoundingBox();
                 const bb = charGeo.boundingBox;
@@ -431,14 +450,12 @@
                 if (bb.min.x !== Infinity) {
                     const charWidth = bb.max.x - bb.min.x;
                     const charMesh = new THREE.Mesh(charGeo, textMat);
-                    // Ép dính lề trái của hình học vào đúng vị trí X hiện tại
                     charMesh.position.x = currentX - bb.min.x;
                     textGroup.add(charMesh);
                     
-                    // Tính tọa độ X tiếp theo cộng thêm khoảng hở vật lý
                     currentX += charWidth + spacing3D;
                 } else {
-                    currentX += size * 0.5 + spacing3D;
+                    currentX += currentFont2D.getAdvanceWidth(char, size) + spacing3D;
                 }
             }
 
@@ -452,7 +469,7 @@
             scene.add(textGroup);
         };
 
-        // ĐỔI FONT -> TỰ ĐỘNG ĐỔI MIN/MAX/VALUE KHOẢNG CÁCH NHƯ YÊU CẦU
+        // Khi người dùng chọn phông chữ mới sẽ tự động đổi Min/Max cho hợp lý
         inputFont.addEventListener('change', () => {
             if (inputFont.value === 'montserrat') {
                 inputSpace.min = 13;
@@ -467,6 +484,12 @@
             updateText();
         });
 
+        // Lắng nghe thay đổi từ thanh trượt Size mới
+        inputScale.addEventListener('input', () => { 
+            document.getElementById(`valScale${index}`).textContent = inputScale.value; 
+            updateText(); 
+        });
+        
         inputName.addEventListener('input', updateText);
         inputSpace.addEventListener('input', () => { document.getElementById(`valSpace${index}`).textContent = inputSpace.value; updateText(); });
         inputX.addEventListener('input', () => { document.getElementById(`valX${index}`).textContent = inputX.value; updateText(); });
@@ -525,12 +548,12 @@
             const modelType = document.querySelector(`input[name="kcType${i}"]:checked`).value;
             const font2D = fonts2D[fontKey] || fonts2D['montserrat']; 
             const spacing = parseFloat(document.getElementById(`kcSpace${i}`).value);
+            const scaleSize = document.getElementById(`kcScale${i}`).value; // Lấy Size gửi mail
             
             let path = new opentype.Path();
             let currentX = 0; const y = 100;
             const chars = Array.from(keyText.normalize('NFC'));
 
-            // ĐỒNG BỘ CƠ CHẾ KHOẢNG CÁCH VẬT LÝ VÀO FILE SVG
             for (let j = 0; j < chars.length; j++) {
                 if(chars[j] !== ' ') {
                     const tempPath = font2D.getPath(chars[j], 0, y, 100);
@@ -559,6 +582,7 @@
             formData.append(`Keychain_${i}_Tên`, keyText);
             formData.append(`Keychain_${i}_Phông_chữ`, fontName);
             formData.append(`Keychain_${i}_Loại_Cà_vạt`, modelType === 'HFM.stl' ? 'Nam (HFM)' : 'Nữ (HFF)');
+            formData.append(`Keychain_${i}_KíchThướcChữ`, scaleSize); // Gửi thêm Scale vào Email
             formData.append(`Keychain_${i}_KhoảngCách`, spacing + "px"); 
             formData.append(`Keychain_${i}_TọaĐộ_X`, document.getElementById(`kcX${i}`).value);
             formData.append(`Keychain_${i}_TọaĐộ_Y`, "-3"); 
