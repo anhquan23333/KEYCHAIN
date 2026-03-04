@@ -17,20 +17,51 @@
     </script>
 
     <style>
-        body { font-family: 'Montserrat', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #000428 0%, #004e92 100%); overflow: hidden; color: #e2e8f0; }
+        /* TỔNG THỂ & BACKGROUND ROYAL BLUE */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            overflow: hidden; 
+            color: #e2e8f0;
+        }
+        
+        /* HIỆU ỨNG BLOBS SANG TRỌNG */
         .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 12s infinite ease-in-out alternate; }
         .blob1 { width: 350px; height: 350px; background: #0052D4; border-radius: 50%; top: -50px; left: -50px; }
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        .card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 35px; border-radius: 24px; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; text-align: left; z-index: 1; position: relative; }
+        /* KHỐI CARD KÍNH MỜ (DARK GLASSMORPHISM) */
+        .card { 
+            background: rgba(15, 23, 42, 0.65); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            padding: 35px; 
+            border-radius: 24px; 
+            width: 90%; 
+            max-width: 480px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            text-align: left; 
+            z-index: 1; 
+            position: relative;
+        }
         .card::-webkit-scrollbar { width: 6px; }
         .card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         .card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
         
+        /* TYPOGRAPHY */
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
         
+        /* FORM & INPUTS */
         .input-group { margin-bottom: 18px; }
         label { display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 8px; font-weight: 500; }
         
@@ -262,10 +293,9 @@
 <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-    import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
     import { STLLoader } from 'three/addons/loaders/STLLoader.js';
-    import { TTFLoader } from 'three/addons/loaders/TTFLoader.js';
+    // NHÚNG BỘ GIẢI MÃ SVG ĐỂ LÀM LÕI TẠO HÌNH 3D MỚI
+    import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'; 
 
     let currentQuantity = 0;
     const submitBtn = document.getElementById('submitBtn');
@@ -299,10 +329,10 @@
         setTimeout(() => { viewers.forEach(v => { if(v.index <= currentQuantity) v.resize(); }); }, 300);
     }));
 
+    // BỘ TẢI FONT RÚT GỌN SIÊU TỐC
     const fonts2D = {};
-    const fonts3D = {};
     let loadedAssets = 0;
-    const totalAssets = 4; 
+    const totalAssets = 2; // Chỉ cần tải 2D là đủ vẽ 3D
 
     function checkReady() {
         loadedAssets++;
@@ -320,13 +350,6 @@
     opentype.load(linkTallFont, function(err, font) { 
         if(!err) { fonts2D['tallfont'] = font; } 
         else { fonts2D['tallfont'] = fonts2D['montserrat']; } 
-        checkReady(); 
-    });
-
-    const ttfLoader = new TTFLoader();
-    ttfLoader.load(linkMontserrat, function (json) { fonts3D['montserrat'] = new FontLoader().parse(json); checkReady(); }, undefined, function(){ checkReady(); });
-    ttfLoader.load(linkTallFont, function (json) { fonts3D['tallfont'] = new FontLoader().parse(json); checkReady(); }, undefined, function(){ 
-        fonts3D['tallfont'] = fonts3D['montserrat']; 
         checkReady(); 
     });
 
@@ -390,9 +413,8 @@
 
         const updateText = () => {
             const fontKey = inputFont.value;
-            const currentFont3D = fonts3D[fontKey] || fonts3D['montserrat']; 
-            const currentFont2D = fonts2D[fontKey] || fonts2D['montserrat']; 
-            if (!currentFont3D || !currentFont2D) return;
+            const font2D = fonts2D[fontKey] || fonts2D['montserrat']; 
+            if (!font2D) return;
 
             const textStr = inputName.value || ' '; 
             
@@ -402,69 +424,92 @@
             }
 
             const thickness = 1.8; 
-            const spacing3D = parseFloat(inputSpace.value) * 0.08; 
-            const scaleVal = parseFloat(inputScale.value);
+            const spacing = parseFloat(inputSpace.value); 
+            const userScale = parseFloat(inputScale.value);
             
-            textGroup = new THREE.Group();
-            const textMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.3 });
-            
-            let currentX = 0; const size = 8;
             const chars = Array.from(textStr.normalize('NFC'));
+            
+            // BƯỚC 1: VẼ PATH SVG 2D CHUẨN TYPOGRAPHY (Lấy Advance Width & Kerning)
+            let path = new opentype.Path();
+            let currentX = 0; const y = 0; const fontSize = 100;
 
-            // THUẬT TOÁN KHOẢNG CÁCH CHUẨN TYPOGRAPHY: SỬ DỤNG ADVANCE WIDTH GỐC
             for (let i = 0; i < chars.length; i++) {
                 const char = chars[i];
-                
-                // Lấy độ rộng tiêu chuẩn của ký tự từ lõi phông chữ 2D
-                const glyph = currentFont2D.charToGlyph(char);
-                const advanceScaled = (glyph.advanceWidth || 0) * (size / currentFont2D.unitsPerEm);
+                const glyph = font2D.charToGlyph(char);
+                const advanceScaled = (glyph.advanceWidth || 0) * (fontSize / font2D.unitsPerEm);
 
-                if (char === ' ') { 
-                    currentX += advanceScaled + spacing3D; 
-                    continue; 
+                if (char !== ' ') {
+                    const charPath = font2D.getPath(char, currentX, y, fontSize);
+                    path.extend(charPath);
                 }
 
-                const charGeo = new TextGeometry(char, { font: currentFont3D, size: size, height: thickness, curveSegments: 4, bevelEnabled: false });
-                const charMesh = new THREE.Mesh(charGeo, textMat);
-                
-                // BẢO TOÀN LỀ TRÁI: Đặt mesh nguyên bản tại currentX mà không trừ hao
-                charMesh.position.x = currentX;
-                textGroup.add(charMesh);
-                
-                // Dịch chuyển đến vị trí chữ tiếp theo
-                currentX += advanceScaled + spacing3D;
+                let kerningScaled = 0;
+                if (i < chars.length - 1) {
+                    const nextGlyph = font2D.charToGlyph(chars[i+1]);
+                    kerningScaled = font2D.getKerningValue(glyph, nextGlyph) * (fontSize / font2D.unitsPerEm);
+                }
+
+                currentX += advanceScaled + kerningScaled + spacing;
             }
 
-            // TÍNH TOÁN NEO TÂM ĐỂ SCALE KHÔNG LỆCH
-            const box = new THREE.Box3().setFromObject(textGroup);
-            const center = new THREE.Vector3();
-            box.getCenter(center);
-            
-            textGroup.children.forEach(child => {
-                child.position.x -= center.x;
-                child.position.y -= center.y;
-            });
+            const pathData = path.toPathData(5); // Độ nét cao
+            textGroup = new THREE.Group();
 
-            textGroup.scale.set(scaleVal, scaleVal, 1);
+            // BƯỚC 2: CHUYỂN PATH THÀNH 3D (Đảm bảo 100% khớp với file tải về)
+            if (pathData && pathData.trim() !== '') {
+                const svgString = `<svg xmlns="http://www.w3.org/2000/svg"><path d="${pathData}"/></svg>`;
+                const svgLoader = new SVGLoader();
+                const svgData = svgLoader.parse(svgString);
+
+                // DoubleSide giúp fix lỗi đen chữ nếu bị lật ngược
+                const textMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.3, side: THREE.DoubleSide });
+                
+                // Mức scale đồng bộ từ fontSize 100 xuống không gian 3D
+                const baseScale = 0.08; 
+                const extrudeDepth = thickness / baseScale;
+
+                for (const p of svgData.paths) {
+                    const shapes = SVGLoader.createShapes(p);
+                    for (const shape of shapes) {
+                        const geo = new THREE.ExtrudeGeometry(shape, {
+                            depth: extrudeDepth,
+                            bevelEnabled: false,
+                            curveSegments: 4
+                        });
+                        const mesh = new THREE.Mesh(geo, textMat);
+                        textGroup.add(mesh);
+                    }
+                }
+
+                // THUẬT TOÁN NEO TÂM (Tránh lệch khi kéo Scale)
+                const box = new THREE.Box3().setFromObject(textGroup);
+                const center = new THREE.Vector3();
+                box.getCenter(center);
+                
+                textGroup.children.forEach(child => {
+                    child.position.x -= center.x;
+                    child.position.y -= center.y;
+                });
+
+                // Cài đặt tỷ lệ
+                const finalScale = baseScale * userScale;
+                // SVG bị ngược trục Y so với 3D, nên ta dùng (-) cho trục Y
+                textGroup.scale.set(finalScale, -finalScale, baseScale);
+            }
 
             const posX = parseFloat(inputX.value);
-            const posY = 1; // Ghim trục Y
+            const posY = 1; 
             const posZ = 1.5; 
             
             textGroup.position.set(posX, posY, posZ); 
             scene.add(textGroup);
         };
 
-        // ĐỔI FONT -> TỰ ĐỘNG ĐỔI MIN/MAX/VALUE KHOẢNG CÁCH
         inputFont.addEventListener('change', () => {
             if (inputFont.value === 'montserrat') {
-                inputSpace.min = 13;
-                inputSpace.max = 28;
-                inputSpace.value = 18;
+                inputSpace.min = 13; inputSpace.max = 28; inputSpace.value = 18;
             } else {
-                inputSpace.min = 7;
-                inputSpace.max = 18;
-                inputSpace.value = 15;
+                inputSpace.min = 7; inputSpace.max = 18; inputSpace.value = 15;
             }
             document.getElementById(`valSpace${index}`).textContent = inputSpace.value;
             updateText();
@@ -535,7 +580,6 @@
             let currentX = 0; const y = 100; const fontSize = 100;
             const chars = Array.from(keyText.normalize('NFC'));
 
-            // ĐỒNG BỘ CƠ CHẾ KHOẢNG CÁCH GỐC VÀO FILE SVG
             for (let j = 0; j < chars.length; j++) {
                 const char = chars[j];
                 const glyph = font2D.charToGlyph(char);
@@ -545,8 +589,14 @@
                     const charPath = font2D.getPath(char, currentX, y, fontSize);
                     path.extend(charPath);
                 }
+
+                let kerningScaled = 0;
+                if (j < chars.length - 1) {
+                    const nextGlyph = font2D.charToGlyph(chars[j+1]);
+                    kerningScaled = font2D.getKerningValue(glyph, nextGlyph) * (fontSize / font2D.unitsPerEm);
+                }
                 
-                currentX += advanceScaled + spacing;
+                currentX += advanceScaled + kerningScaled + spacing;
             }
             
             const bb = path.getBoundingBox();
