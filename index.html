@@ -192,7 +192,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace1" style="color:#38bdf8">18</span> px</label>
-                    <input type="range" id="kcSpace1" min="13" max="28" value="18" step="1">
+                    <input type="range" id="kcSpace1" min="7" max="28" value="18" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX1" style="color:#38bdf8">0</span></label>
@@ -232,7 +232,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace2" style="color:#38bdf8">18</span> px</label>
-                    <input type="range" id="kcSpace2" min="13" max="28" value="18" step="1">
+                    <input type="range" id="kcSpace2" min="7" max="28" value="18" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX2" style="color:#38bdf8">0</span></label>
@@ -272,7 +272,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">18</span> px</label>
-                    <input type="range" id="kcSpace3" min="13" max="28" value="18" step="1">
+                    <input type="range" id="kcSpace3" min="7" max="28" value="18" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
@@ -294,7 +294,6 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { STLLoader } from 'three/addons/loaders/STLLoader.js';
-    // NHÚNG BỘ GIẢI MÃ SVG ĐỂ LÀM LÕI TẠO HÌNH 3D MỚI
     import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'; 
 
     let currentQuantity = 0;
@@ -329,10 +328,9 @@
         setTimeout(() => { viewers.forEach(v => { if(v.index <= currentQuantity) v.resize(); }); }, 300);
     }));
 
-    // BỘ TẢI FONT RÚT GỌN SIÊU TỐC
     const fonts2D = {};
     let loadedAssets = 0;
-    const totalAssets = 2; // Chỉ cần tải 2D là đủ vẽ 3D
+    const totalAssets = 2; 
 
     function checkReady() {
         loadedAssets++;
@@ -429,7 +427,6 @@
             
             const chars = Array.from(textStr.normalize('NFC'));
             
-            // BƯỚC 1: VẼ PATH SVG 2D CHUẨN TYPOGRAPHY (Lấy Advance Width & Kerning)
             let path = new opentype.Path();
             let currentX = 0; const y = 0; const fontSize = 100;
 
@@ -452,19 +449,16 @@
                 currentX += advanceScaled + kerningScaled + spacing;
             }
 
-            const pathData = path.toPathData(5); // Độ nét cao
+            const pathData = path.toPathData(5); 
             textGroup = new THREE.Group();
 
-            // BƯỚC 2: CHUYỂN PATH THÀNH 3D (Đảm bảo 100% khớp với file tải về)
             if (pathData && pathData.trim() !== '') {
                 const svgString = `<svg xmlns="http://www.w3.org/2000/svg"><path d="${pathData}"/></svg>`;
                 const svgLoader = new SVGLoader();
                 const svgData = svgLoader.parse(svgString);
 
-                // DoubleSide giúp fix lỗi đen chữ nếu bị lật ngược
                 const textMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.3, side: THREE.DoubleSide });
                 
-                // Mức scale đồng bộ từ fontSize 100 xuống không gian 3D
                 const baseScale = 0.08; 
                 const extrudeDepth = thickness / baseScale;
 
@@ -481,7 +475,6 @@
                     }
                 }
 
-                // THUẬT TOÁN NEO TÂM (Tránh lệch khi kéo Scale)
                 const box = new THREE.Box3().setFromObject(textGroup);
                 const center = new THREE.Vector3();
                 box.getCenter(center);
@@ -491,9 +484,7 @@
                     child.position.y -= center.y;
                 });
 
-                // Cài đặt tỷ lệ
                 const finalScale = baseScale * userScale;
-                // SVG bị ngược trục Y so với 3D, nên ta dùng (-) cho trục Y
                 textGroup.scale.set(finalScale, -finalScale, baseScale);
             }
 
@@ -507,9 +498,13 @@
 
         inputFont.addEventListener('change', () => {
             if (inputFont.value === 'montserrat') {
-                inputSpace.min = 13; inputSpace.max = 28; inputSpace.value = 18;
+                inputSpace.min = 7;
+                inputSpace.max = 28;
+                inputSpace.value = 18;
             } else {
-                inputSpace.min = 7; inputSpace.max = 18; inputSpace.value = 15;
+                inputSpace.min = 4;
+                inputSpace.max = 18;
+                inputSpace.value = 15;
             }
             document.getElementById(`valSpace${index}`).textContent = inputSpace.value;
             updateText();
