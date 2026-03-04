@@ -411,54 +411,44 @@
             let currentX = 0; const size = 8;
             const chars = Array.from(textStr.normalize('NFC'));
 
-            // THUẬT TOÁN KHOẢNG CÁCH CHUẨN TYPOGRAPHY: SỬ DỤNG ADVANCE WIDTH VÀ KERNING
+            // THUẬT TOÁN KHOẢNG CÁCH CHUẨN TYPOGRAPHY: SỬ DỤNG ADVANCE WIDTH GỐC
             for (let i = 0; i < chars.length; i++) {
                 const char = chars[i];
+                
+                // Lấy độ rộng tiêu chuẩn của ký tự từ lõi phông chữ 2D
+                const glyph = currentFont2D.charToGlyph(char);
+                const advanceScaled = (glyph.advanceWidth || 0) * (size / currentFont2D.unitsPerEm);
+
                 if (char === ' ') { 
-                    const spaceAdvance = (currentFont2D.charToGlyph(' ').advanceWidth || 0) * (size / currentFont2D.unitsPerEm);
-                    currentX += spaceAdvance + spacing3D; 
+                    currentX += advanceScaled + spacing3D; 
                     continue; 
                 }
 
-                // Dựng geometry mà KHÔNG trừ bớt Bounding Box để bảo toàn Lề Trái (Left Side Bearing)
                 const charGeo = new TextGeometry(char, { font: currentFont3D, size: size, height: thickness, curveSegments: 4, bevelEnabled: false });
                 const charMesh = new THREE.Mesh(charGeo, textMat);
                 
-                // Đặt mesh trực tiếp tại vị trí X con trỏ
+                // BẢO TOÀN LỀ TRÁI: Đặt mesh nguyên bản tại currentX mà không trừ hao
                 charMesh.position.x = currentX;
                 textGroup.add(charMesh);
                 
-                // Lấy Advance Width từ file font gốc
-                const glyph = currentFont2D.charToGlyph(char);
-                const advanceScaled = (glyph.advanceWidth || 0) * (size / currentFont2D.unitsPerEm);
-                
-                // Lấy Kerning (Độ ép khoảng cách tự nhiên giữa các cặp chữ)
-                let kerningScaled = 0;
-                if (i < chars.length - 1) {
-                    const nextGlyph = currentFont2D.charToGlyph(chars[i+1]);
-                    kerningScaled = currentFont2D.getKerningValue(glyph, nextGlyph) * (size / currentFont2D.unitsPerEm);
-                }
-                
-                // Dịch chuyển X cho chữ tiếp theo
-                currentX += advanceScaled + kerningScaled + spacing3D;
+                // Dịch chuyển đến vị trí chữ tiếp theo
+                currentX += advanceScaled + spacing3D;
             }
 
-            // TÍNH TOÁN NEO TÂM (ANCHOR ORIGIN)
+            // TÍNH TOÁN NEO TÂM ĐỂ SCALE KHÔNG LỆCH
             const box = new THREE.Box3().setFromObject(textGroup);
             const center = new THREE.Vector3();
             box.getCenter(center);
             
-            // Lùi các chữ cái về tâm của Nhóm
             textGroup.children.forEach(child => {
                 child.position.x -= center.x;
                 child.position.y -= center.y;
             });
 
-            // Tác động Scale lên Nhóm
             textGroup.scale.set(scaleVal, scaleVal, 1);
 
             const posX = parseFloat(inputX.value);
-            const posY = 1; 
+            const posY = 1; // Ghim trục Y
             const posZ = 1.5; 
             
             textGroup.position.set(posX, posY, posZ); 
@@ -545,24 +535,18 @@
             let currentX = 0; const y = 100; const fontSize = 100;
             const chars = Array.from(keyText.normalize('NFC'));
 
-            // ÁP DỤNG THUẬT TOÁN TYPOGRAPHY VÀO VIỆC XUẤT FILE SVG 2D
+            // ĐỒNG BỘ CƠ CHẾ KHOẢNG CÁCH GỐC VÀO FILE SVG
             for (let j = 0; j < chars.length; j++) {
                 const char = chars[j];
+                const glyph = font2D.charToGlyph(char);
+                const advanceScaled = (glyph.advanceWidth || 0) * (fontSize / font2D.unitsPerEm);
+
                 if(char !== ' ') {
                     const charPath = font2D.getPath(char, currentX, y, fontSize);
                     path.extend(charPath);
                 }
                 
-                const glyph = font2D.charToGlyph(char);
-                const advanceScaled = (glyph.advanceWidth || 0) * (fontSize / font2D.unitsPerEm);
-                
-                let kerningScaled = 0;
-                if (j < chars.length - 1) {
-                    const nextGlyph = font2D.charToGlyph(chars[j+1]);
-                    kerningScaled = font2D.getKerningValue(glyph, nextGlyph) * (fontSize / font2D.unitsPerEm);
-                }
-                
-                currentX += advanceScaled + kerningScaled + spacing;
+                currentX += advanceScaled + spacing;
             }
             
             const bb = path.getBoundingBox();
