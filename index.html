@@ -17,20 +17,51 @@
     </script>
 
     <style>
-        body { font-family: 'Montserrat', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #000428 0%, #004e92 100%); overflow: hidden; color: #e2e8f0; }
+        /* TỔNG THỂ & BACKGROUND ROYAL BLUE */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            overflow: hidden; 
+            color: #e2e8f0;
+        }
+        
+        /* HIỆU ỨNG BLOBS SANG TRỌNG */
         .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 12s infinite ease-in-out alternate; }
         .blob1 { width: 350px; height: 350px; background: #0052D4; border-radius: 50%; top: -50px; left: -50px; }
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        .card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 35px; border-radius: 24px; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; text-align: left; z-index: 1; position: relative; }
+        /* KHỐI CARD KÍNH MỜ (DARK GLASSMORPHISM) */
+        .card { 
+            background: rgba(15, 23, 42, 0.65); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            padding: 35px; 
+            border-radius: 24px; 
+            width: 90%; 
+            max-width: 480px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            text-align: left; 
+            z-index: 1; 
+            position: relative;
+        }
         .card::-webkit-scrollbar { width: 6px; }
         .card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         .card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
         
+        /* TYPOGRAPHY */
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
         
+        /* FORM & INPUTS */
         .input-group { margin-bottom: 18px; }
         label { display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 8px; font-weight: 500; }
         
@@ -280,6 +311,7 @@
         "3": { text: "Vui lòng thanh toán 180.000đ vào QR dưới đây", qr: "LINK_QR_3" }
     };
 
+    // LOGIC TRƯỢT MỞ GIAO DIỆN (ACCORDION ANIMATION)
     document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {
         currentQuantity = parseInt(e.target.value);
         
@@ -337,7 +369,7 @@
         const inputName = document.getElementById(`kcName${index}`);
         const inputFont = document.getElementById(`kcFont${index}`);
         const inputSpace = document.getElementById(`kcSpace${index}`);
-        const inputScale = document.getElementById(`kcScale${index}`); // Tích hợp Scale
+        const inputScale = document.getElementById(`kcScale${index}`);
         const inputX = document.getElementById(`kcX${index}`);
 
         const scene = new THREE.Scene();
@@ -374,7 +406,7 @@
 
                 const stlMaterial = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.3, metalness: 0.2 });
                 baseMesh = new THREE.Mesh(geometry, stlMaterial);
-                baseMesh.scale.set(2.9, 2.9, 2.9); 
+                baseMesh.scale.set(1.5, 1.5, 1.5); 
                 scene.add(baseMesh);
             }, undefined, function() {});
         };
@@ -411,28 +443,32 @@
             let currentX = 0; const size = 8;
             const chars = Array.from(textStr.normalize('NFC'));
 
+            // THUẬT TOÁN KHOẢNG CÁCH CHUẨN TYPOGRAPHY KẾT HỢP ADVANCE WIDTH & KERNING
             for (let i = 0; i < chars.length; i++) {
                 const char = chars[i];
                 if (char === ' ') { 
-                    currentX += currentFont2D.getAdvanceWidth(' ', size) + spacing3D; 
+                    const spaceAdvance = (currentFont2D.charToGlyph(' ').advanceWidth || 0) * (size / currentFont2D.unitsPerEm);
+                    currentX += spaceAdvance + spacing3D; 
                     continue; 
                 }
 
                 const charGeo = new TextGeometry(char, { font: currentFont3D, size: size, height: thickness, curveSegments: 4, bevelEnabled: false });
-                charGeo.computeBoundingBox();
-                const bb = charGeo.boundingBox;
+                const charMesh = new THREE.Mesh(charGeo, textMat);
                 
-                if (bb.min.x !== Infinity) {
-                    const charWidth = bb.max.x - bb.min.x;
-                    const charMesh = new THREE.Mesh(charGeo, textMat);
-                    charMesh.position.x = currentX - bb.min.x;
-                    textGroup.add(charMesh);
-                    
-                    const advance = currentFont2D.getAdvanceWidth(char, size);
-                    currentX += advance + spacing3D;
-                } else {
-                    currentX += size * 0.5 + spacing3D;
+                // Đặt mesh tại đúng vị trí X tuyệt đối (bỏ qua bounding box)
+                charMesh.position.x = currentX;
+                textGroup.add(charMesh);
+                
+                const glyph = currentFont2D.charToGlyph(char);
+                const advanceScaled = (glyph.advanceWidth || 0) * (size / currentFont2D.unitsPerEm);
+                
+                let kerningScaled = 0;
+                if (i < chars.length - 1) {
+                    const nextGlyph = currentFont2D.charToGlyph(chars[i+1]);
+                    kerningScaled = currentFont2D.getKerningValue(glyph, nextGlyph) * (size / currentFont2D.unitsPerEm);
                 }
+                
+                currentX += advanceScaled + kerningScaled + spacing3D;
             }
 
             // TÍNH TOÁN NEO TÂM (ANCHOR ORIGIN) ĐỂ KHI SCALE KHÔNG BỊ LỆCH TRỤC
@@ -450,7 +486,7 @@
             textGroup.scale.set(scaleVal, scaleVal, 1);
 
             const posX = parseFloat(inputX.value);
-            const posY = 1; // Đã tinh chỉnh bù trừ lại vị trí sau khi neo tâm để duy trì góc nhìn như bản cũ (tương đương -3 lúc trước)
+            const posY = 1; // Ghim cứng trục Y để giữ vị trí trực quan chuẩn
             const posZ = 1.5; 
             
             textGroup.position.set(posX, posY, posZ); 
@@ -472,9 +508,7 @@
             updateText();
         });
 
-        // Lắng nghe thay đổi của Scale
         inputScale.addEventListener('input', () => { document.getElementById(`valScale${index}`).textContent = parseFloat(inputScale.value).toFixed(1); updateText(); });
-        
         inputName.addEventListener('input', updateText);
         inputSpace.addEventListener('input', () => { document.getElementById(`valSpace${index}`).textContent = inputSpace.value; updateText(); });
         inputX.addEventListener('input', () => { document.getElementById(`valX${index}`).textContent = inputX.value; updateText(); });
@@ -536,26 +570,27 @@
             const scaleSize = document.getElementById(`kcScale${i}`).value;
             
             let path = new opentype.Path();
-            let currentX = 0; const y = 100;
+            let currentX = 0; const y = 100; const fontSize = 100;
             const chars = Array.from(keyText.normalize('NFC'));
 
+            // ĐỒNG BỘ CƠ CHẾ KHOẢNG CÁCH TYPOGRAPHY VÀO FILE SVG
             for (let j = 0; j < chars.length; j++) {
-                if(chars[j] !== ' ') {
-                    const tempPath = font2D.getPath(chars[j], 0, y, 100);
-                    const bb = tempPath.getBoundingBox();
-                    
-                    if (bb.x1 !== Infinity && bb.x2 !== -Infinity) {
-                        const charWidth = bb.x2 - bb.x1;
-                        const originX = currentX - bb.x1;
-                        const finalPath = font2D.getPath(chars[j], originX, y, 100);
-                        path.extend(finalPath);
-                        currentX += charWidth + spacing;
-                    } else {
-                        currentX += font2D.getAdvanceWidth(chars[j], 100) + spacing;
-                    }
-                } else {
-                    currentX += 100 * 0.4 + spacing; 
+                const char = chars[j];
+                if(char !== ' ') {
+                    const charPath = font2D.getPath(char, currentX, y, fontSize);
+                    path.extend(charPath);
                 }
+                
+                const glyph = font2D.charToGlyph(char);
+                const advanceScaled = (glyph.advanceWidth || 0) * (fontSize / font2D.unitsPerEm);
+                
+                let kerningScaled = 0;
+                if (j < chars.length - 1) {
+                    const nextGlyph = font2D.charToGlyph(chars[j+1]);
+                    kerningScaled = font2D.getKerningValue(glyph, nextGlyph) * (fontSize / font2D.unitsPerEm);
+                }
+                
+                currentX += advanceScaled + kerningScaled + spacing;
             }
             
             const bb = path.getBoundingBox();
@@ -567,7 +602,7 @@
             formData.append(`Keychain_${i}_Tên`, keyText);
             formData.append(`Keychain_${i}_Phông_chữ`, fontName);
             formData.append(`Keychain_${i}_Loại_Cà_vạt`, modelType === 'HFM.stl' ? 'Nam (HFM)' : 'Nữ (HFF)');
-            formData.append(`Keychain_${i}_KíchThước(Scale)`, scaleSize + "x"); // Thông báo scale qua mail cho bạn
+            formData.append(`Keychain_${i}_KíchThước(Scale)`, scaleSize + "x");
             formData.append(`Keychain_${i}_KhoảngCách`, spacing + "px"); 
             formData.append(`Keychain_${i}_TọaĐộ_X`, document.getElementById(`kcX${i}`).value);
             formData.append(`Keychain_${i}_TọaĐộ_Y`, "-3"); 
@@ -576,7 +611,6 @@
             formData.append(`Keychain_${i}_FileVector`, svgFile);
         }
 
-        // THAY EMAIL CỦA BẠN VÀO ĐÂY
         fetch("https://formsubmit.co/ajax/EMAIL_CUA_BAN@gmail.com", { method: "POST", body: formData })
         .then(() => {
             document.getElementById('formScreen').style.display = 'none';
