@@ -17,20 +17,51 @@
     </script>
 
     <style>
-        body { font-family: 'Montserrat', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #000428 0%, #004e92 100%); overflow: hidden; color: #e2e8f0; }
+        /* TỔNG THỂ & BACKGROUND ROYAL BLUE */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            overflow: hidden; 
+            color: #e2e8f0;
+        }
+        
+        /* HIỆU ỨNG BLOBS SANG TRỌNG */
         .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 12s infinite ease-in-out alternate; }
         .blob1 { width: 350px; height: 350px; background: #0052D4; border-radius: 50%; top: -50px; left: -50px; }
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        .card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 35px; border-radius: 24px; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; text-align: left; z-index: 1; position: relative; }
+        /* KHỐI CARD KÍNH MỜ (DARK GLASSMORPHISM) */
+        .card { 
+            background: rgba(15, 23, 42, 0.65); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            padding: 35px; 
+            border-radius: 24px; 
+            width: 90%; 
+            max-width: 480px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            text-align: left; 
+            z-index: 1; 
+            position: relative;
+        }
         .card::-webkit-scrollbar { width: 6px; }
         .card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         .card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
         
+        /* TYPOGRAPHY */
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
         
+        /* FORM & INPUTS */
         .input-group { margin-bottom: 18px; }
         label { display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 8px; font-weight: 500; }
         
@@ -366,8 +397,7 @@
         const updateText = () => {
             const fontKey = inputFont.value;
             const currentFont3D = fonts3D[fontKey] || fonts3D['montserrat']; 
-            const currentFont2D = fonts2D[fontKey] || fonts2D['montserrat']; 
-            if (!currentFont3D || !currentFont2D) return;
+            if (!currentFont3D) return;
 
             const textStr = inputName.value || ' '; 
             
@@ -389,18 +419,27 @@
             for (let i = 0; i < chars.length; i++) {
                 const char = chars[i];
                 if (char === ' ') { 
-                    currentX += currentFont2D.getAdvanceWidth(' ', size) + spacing3D; 
+                    currentX += size * 0.4 + spacing3D; 
                     continue; 
                 }
 
+                // CỐT LÕI: Tính toán dựa trên khung viền vật lý Bounding Box thay vì advanceWidth lỗi thời
                 const charGeo = new TextGeometry(char, { font: currentFont3D, size: size, height: thickness, curveSegments: 4, bevelEnabled: false });
+                charGeo.computeBoundingBox();
+                const bb = charGeo.boundingBox;
                 
-                const charMesh = new THREE.Mesh(charGeo, textMat);
-                charMesh.position.x = currentX;
-                textGroup.add(charMesh);
-                
-                const advance = currentFont2D.getAdvanceWidth(char, size);
-                currentX += advance + spacing3D;
+                if (bb.min.x !== Infinity) {
+                    const charWidth = bb.max.x - bb.min.x;
+                    const charMesh = new THREE.Mesh(charGeo, textMat);
+                    // Ép dính lề trái của hình học vào đúng vị trí X hiện tại
+                    charMesh.position.x = currentX - bb.min.x;
+                    textGroup.add(charMesh);
+                    
+                    // Tính tọa độ X tiếp theo cộng thêm khoảng hở vật lý
+                    currentX += charWidth + spacing3D;
+                } else {
+                    currentX += size * 0.5 + spacing3D;
+                }
             }
 
             const totalWidth = currentX > 0 ? currentX - spacing3D : 0;
@@ -488,15 +527,27 @@
             const spacing = parseFloat(document.getElementById(`kcSpace${i}`).value);
             
             let path = new opentype.Path();
-            let x = 0; const y = 100;
+            let currentX = 0; const y = 100;
             const chars = Array.from(keyText.normalize('NFC'));
 
+            // ĐỒNG BỘ CƠ CHẾ KHOẢNG CÁCH VẬT LÝ VÀO FILE SVG
             for (let j = 0; j < chars.length; j++) {
                 if(chars[j] !== ' ') {
-                    const charPath = font2D.getPath(chars[j], x, y, 100);
-                    path.extend(charPath);
+                    const tempPath = font2D.getPath(chars[j], 0, y, 100);
+                    const bb = tempPath.getBoundingBox();
+                    
+                    if (bb.x1 !== Infinity && bb.x2 !== -Infinity) {
+                        const charWidth = bb.x2 - bb.x1;
+                        const originX = currentX - bb.x1;
+                        const finalPath = font2D.getPath(chars[j], originX, y, 100);
+                        path.extend(finalPath);
+                        currentX += charWidth + spacing;
+                    } else {
+                        currentX += font2D.getAdvanceWidth(chars[j], 100) + spacing;
+                    }
+                } else {
+                    currentX += 100 * 0.4 + spacing; 
                 }
-                x += font2D.getAdvanceWidth(chars[j], 100) + spacing;
             }
             
             const bb = path.getBoundingBox();
