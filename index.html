@@ -17,51 +17,20 @@
     </script>
 
     <style>
-        /* TỔNG THỂ & BACKGROUND ROYAL BLUE */
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            margin: 0; 
-            min-height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
-            overflow: hidden; 
-            color: #e2e8f0;
-        }
-        
-        /* HIỆU ỨNG BLOBS SANG TRỌNG */
+        body { font-family: 'Montserrat', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #000428 0%, #004e92 100%); overflow: hidden; color: #e2e8f0; }
         .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 12s infinite ease-in-out alternate; }
         .blob1 { width: 350px; height: 350px; background: #0052D4; border-radius: 50%; top: -50px; left: -50px; }
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        /* KHỐI CARD KÍNH MỜ (DARK GLASSMORPHISM) */
-        .card { 
-            background: rgba(15, 23, 42, 0.65); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
-            padding: 35px; 
-            border-radius: 24px; 
-            width: 90%; 
-            max-width: 480px; 
-            max-height: 85vh; 
-            overflow-y: auto; 
-            text-align: left; 
-            z-index: 1; 
-            position: relative;
-        }
+        .card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 35px; border-radius: 24px; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; text-align: left; z-index: 1; position: relative; }
         .card::-webkit-scrollbar { width: 6px; }
         .card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         .card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
         
-        /* TYPOGRAPHY */
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
         
-        /* FORM & INPUTS */
         .input-group { margin-bottom: 18px; }
         label { display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 8px; font-weight: 500; }
         
@@ -311,7 +280,6 @@
         "3": { text: "Vui lòng thanh toán 180.000đ vào QR dưới đây", qr: "LINK_QR_3" }
     };
 
-    // LOGIC TRƯỢT MỞ GIAO DIỆN (ACCORDION ANIMATION)
     document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {
         currentQuantity = parseInt(e.target.value);
         
@@ -443,7 +411,7 @@
             let currentX = 0; const size = 8;
             const chars = Array.from(textStr.normalize('NFC'));
 
-            // THUẬT TOÁN KHOẢNG CÁCH CHUẨN TYPOGRAPHY KẾT HỢP ADVANCE WIDTH & KERNING
+            // THUẬT TOÁN KHOẢNG CÁCH CHUẨN TYPOGRAPHY: SỬ DỤNG ADVANCE WIDTH VÀ KERNING
             for (let i = 0; i < chars.length; i++) {
                 const char = chars[i];
                 if (char === ' ') { 
@@ -452,41 +420,45 @@
                     continue; 
                 }
 
+                // Dựng geometry mà KHÔNG trừ bớt Bounding Box để bảo toàn Lề Trái (Left Side Bearing)
                 const charGeo = new TextGeometry(char, { font: currentFont3D, size: size, height: thickness, curveSegments: 4, bevelEnabled: false });
                 const charMesh = new THREE.Mesh(charGeo, textMat);
                 
-                // Đặt mesh tại đúng vị trí X tuyệt đối (bỏ qua bounding box)
+                // Đặt mesh trực tiếp tại vị trí X con trỏ
                 charMesh.position.x = currentX;
                 textGroup.add(charMesh);
                 
+                // Lấy Advance Width từ file font gốc
                 const glyph = currentFont2D.charToGlyph(char);
                 const advanceScaled = (glyph.advanceWidth || 0) * (size / currentFont2D.unitsPerEm);
                 
+                // Lấy Kerning (Độ ép khoảng cách tự nhiên giữa các cặp chữ)
                 let kerningScaled = 0;
                 if (i < chars.length - 1) {
                     const nextGlyph = currentFont2D.charToGlyph(chars[i+1]);
                     kerningScaled = currentFont2D.getKerningValue(glyph, nextGlyph) * (size / currentFont2D.unitsPerEm);
                 }
                 
+                // Dịch chuyển X cho chữ tiếp theo
                 currentX += advanceScaled + kerningScaled + spacing3D;
             }
 
-            // TÍNH TOÁN NEO TÂM (ANCHOR ORIGIN) ĐỂ KHI SCALE KHÔNG BỊ LỆCH TRỤC
+            // TÍNH TOÁN NEO TÂM (ANCHOR ORIGIN)
             const box = new THREE.Box3().setFromObject(textGroup);
             const center = new THREE.Vector3();
             box.getCenter(center);
             
-            // Lùi các chữ cái về tâm của Nhóm (Group)
+            // Lùi các chữ cái về tâm của Nhóm
             textGroup.children.forEach(child => {
                 child.position.x -= center.x;
                 child.position.y -= center.y;
             });
 
-            // Tác động Scale lên Nhóm (Giữ nguyên Z để bề dày luôn đúng 1.8mm)
+            // Tác động Scale lên Nhóm
             textGroup.scale.set(scaleVal, scaleVal, 1);
 
             const posX = parseFloat(inputX.value);
-            const posY = 1; // Ghim cứng trục Y để giữ vị trí trực quan chuẩn
+            const posY = 1; 
             const posZ = 1.5; 
             
             textGroup.position.set(posX, posY, posZ); 
@@ -573,7 +545,7 @@
             let currentX = 0; const y = 100; const fontSize = 100;
             const chars = Array.from(keyText.normalize('NFC'));
 
-            // ĐỒNG BỘ CƠ CHẾ KHOẢNG CÁCH TYPOGRAPHY VÀO FILE SVG
+            // ÁP DỤNG THUẬT TOÁN TYPOGRAPHY VÀO VIỆC XUẤT FILE SVG 2D
             for (let j = 0; j < chars.length; j++) {
                 const char = chars[j];
                 if(char !== ' ') {
