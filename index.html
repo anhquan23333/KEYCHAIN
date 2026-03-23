@@ -595,14 +595,23 @@
         }
 
         // THAY EMAIL CỦA BẠN VÀO ĐÂY
-        fetch("https://formsubmit.co/ajax/ps5player09@gmail.com", { method: "POST", body: formData })
-        .then(() => {
-            document.getElementById('formScreen').style.display = 'none';
-            document.getElementById('thankYouMsg').textContent = `Cảm ơn ${nameVal} đã đồng hành cùng thiết kế của chúng mình!`;
-            document.getElementById('successScreen').style.display = 'block';
-        }).catch(() => {
-            alert("Có lỗi xảy ra, vui lòng kiểm tra mạng và thử lại!");
-            submitBtn.textContent = "GỬI ĐƠN HÀNG & FILE 3D (.STL)"; submitBtn.disabled = false;
+        formData.append("_captcha", "false");
+        formData.append("_template", "box");
+      fetch("https://formsubmit.co/ajax/EMAIL_CUA_BAN@gmail.com", { method: "POST", body: formData })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success || data.success === "true") {
+                document.getElementById('formScreen').style.display = 'none';
+                document.getElementById('thankYouMsg').textContent = `Cảm ơn ${nameVal} đã đồng hành cùng thiết kế của chúng mình!`;
+                document.getElementById('successScreen').style.display = 'block';
+            } else {
+                throw new Error("FormSubmit từ chối do dung lượng hoặc bộ lọc");
+            }
+        }).catch((error) => {
+            console.error(error);
+            alert("Lỗi: Không thể gửi mail. Có thể do dung lượng file quá lớn (Vượt 10MB) hoặc mạng yếu!");
+            submitBtn.textContent = "GỬI ĐƠN HÀNG & FILE 3D (.STL)"; 
+            submitBtn.disabled = false;
         });
     });
 </script>
