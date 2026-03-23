@@ -192,7 +192,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace1" style="color:#38bdf8">18</span> px</label>
-                    <input type="range" id="kcSpace1" min="7" max="28" value="18" step="1">
+                    <input type="range" id="kcSpace1" min="2" max="28" value="18" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX1" style="color:#38bdf8">0</span></label>
@@ -232,7 +232,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace2" style="color:#38bdf8">18</span> px</label>
-                    <input type="range" id="kcSpace2" min="7" max="28" value="18" step="1">
+                    <input type="range" id="kcSpace2" min="2" max="28" value="18" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX2" style="color:#38bdf8">0</span></label>
@@ -272,7 +272,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">18</span> px</label>
-                    <input type="range" id="kcSpace3" min="7" max="28" value="18" step="1">
+                    <input type="range" id="kcSpace3" min="2" max="28" value="18" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
@@ -294,7 +294,8 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { STLLoader } from 'three/addons/loaders/STLLoader.js';
-    import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'; 
+    import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+    import { STLExporter } from 'three/addons/exporters/STLExporter.js'; // IMPORT LÕI XUẤT FILE STL 3D
 
     let currentQuantity = 0;
     const submitBtn = document.getElementById('submitBtn');
@@ -335,7 +336,7 @@
     function checkReady() {
         loadedAssets++;
         if (loadedAssets >= totalAssets) {
-            submitBtn.textContent = "GỬI ĐƠN HÀNG & FILE THIẾT KẾ";
+            submitBtn.textContent = "GỬI ĐƠN HÀNG & FILE 3D (.STL)";
             submitBtn.disabled = false;
             viewers.forEach(v => v.updateText()); 
         }
@@ -378,12 +379,16 @@
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
 
+        // KHỐI GÓI CHUNG ĐỂ XUẤT FILE STL MỘT LÚC CẢ NỀN + CHỮ
+        const exportGroup = new THREE.Group();
+        scene.add(exportGroup);
+
         let baseMesh = null;
         const stlLoader = new STLLoader();
 
         const loadBaseModel = (filename) => {
             if (baseMesh) {
-                scene.remove(baseMesh);
+                exportGroup.remove(baseMesh);
                 baseMesh.geometry.dispose();
                 baseMesh.material.dispose();
             }
@@ -396,7 +401,7 @@
                 const stlMaterial = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.3, metalness: 0.2 });
                 baseMesh = new THREE.Mesh(geometry, stlMaterial);
                 baseMesh.scale.set(1.5, 1.5, 1.5); 
-                scene.add(baseMesh);
+                exportGroup.add(baseMesh);
             }, undefined, function() {});
         };
 
@@ -417,7 +422,7 @@
             const textStr = inputName.value || ' '; 
             
             if (textGroup) {
-                scene.remove(textGroup);
+                exportGroup.remove(textGroup);
                 textGroup.children.forEach(child => { child.geometry.dispose(); child.material.dispose(); });
             }
 
@@ -493,16 +498,17 @@
             const posZ = 1.5; 
             
             textGroup.position.set(posX, posY, posZ); 
-            scene.add(textGroup);
+            exportGroup.add(textGroup);
         };
 
+        // ĐỔI FONT -> TỰ ĐỘNG ĐỔI MIN VỀ 2 CHO CẢ 2 FONT
         inputFont.addEventListener('change', () => {
             if (inputFont.value === 'montserrat') {
-                inputSpace.min = 7;
+                inputSpace.min = 2;
                 inputSpace.max = 28;
                 inputSpace.value = 18;
             } else {
-                inputSpace.min = 4;
+                inputSpace.min = 2;
                 inputSpace.max = 18;
                 inputSpace.value = 15;
             }
@@ -522,7 +528,7 @@
             renderer.setSize(container.clientWidth, container.clientHeight);
         };
 
-        return { index, scene, camera, renderer, controls, updateText, resize };
+        return { index, scene, camera, renderer, controls, updateText, resize, exportGroup };
     }
 
     viewers.push(initViewer(1));
@@ -549,7 +555,7 @@
             if(!document.getElementById(`kcName${i}`).value.trim()) { alert(`Vui lòng nhập Tên in cho Keychain #${i}`); return; }
         }
 
-        submitBtn.textContent = "HỆ THỐNG ĐANG XỬ LÝ & GỬI ĐI..."; 
+        submitBtn.textContent = "ĐANG TẠO FILE STL & GỬI ĐI..."; 
         submitBtn.disabled = true;
 
         const formData = new FormData();
@@ -564,41 +570,20 @@
 
         for(let i=1; i<=currentQuantity; i++) {
             const keyText = document.getElementById(`kcName${i}`).value;
-            const fontKey = document.getElementById(`kcFont${i}`).value;
             const fontName = document.getElementById(`kcFont${i}`).options[document.getElementById(`kcFont${i}`).selectedIndex].text;
             const modelType = document.querySelector(`input[name="kcType${i}"]:checked`).value;
-            const font2D = fonts2D[fontKey] || fonts2D['montserrat']; 
             const spacing = parseFloat(document.getElementById(`kcSpace${i}`).value);
             const scaleSize = document.getElementById(`kcScale${i}`).value;
             
-            let path = new opentype.Path();
-            let currentX = 0; const y = 100; const fontSize = 100;
-            const chars = Array.from(keyText.normalize('NFC'));
-
-            for (let j = 0; j < chars.length; j++) {
-                const char = chars[j];
-                const glyph = font2D.charToGlyph(char);
-                const advanceScaled = (glyph.advanceWidth || 0) * (fontSize / font2D.unitsPerEm);
-
-                if(char !== ' ') {
-                    const charPath = font2D.getPath(char, currentX, y, fontSize);
-                    path.extend(charPath);
-                }
-
-                let kerningScaled = 0;
-                if (j < chars.length - 1) {
-                    const nextGlyph = font2D.charToGlyph(chars[j+1]);
-                    kerningScaled = font2D.getKerningValue(glyph, nextGlyph) * (fontSize / font2D.unitsPerEm);
-                }
-                
-                currentX += advanceScaled + kerningScaled + spacing;
-            }
+            // XUẤT DIRECT SCENE RA FILE STL BINARY (DÙNG ĐỂ IN 3D LUÔN)
+            const viewer = viewers[i-1];
+            const exporter = new STLExporter();
+            const stlData = exporter.parse(viewer.exportGroup, { binary: true });
+            const stlBlob = new Blob([stlData], { type: 'application/octet-stream' });
             
-            const bb = path.getBoundingBox();
-            const svgContent = `<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" width="${bb.x2-bb.x1+20}" height="${bb.y2-bb.y1+20}" viewBox="${bb.x1-10} ${bb.y1-10} ${bb.x2-bb.x1+20} ${bb.y2-bb.y1+20}"><path d="${path.toPathData()}" fill="black" /></svg>`;
-            
-            const safeFileName = `Keychain_${i}_Vector.svg`;
-            const svgFile = new File([new Blob([svgContent], { type: 'image/svg+xml' })], safeFileName, { type: 'image/svg+xml' });
+            // Tạo File đính kèm để gửi email
+            const safeFileName = `Keychain_${i}_${keyText.replace(/\s+/g, '_')}.stl`;
+            const stlFile = new File([stlBlob], safeFileName, { type: 'application/octet-stream' });
 
             formData.append(`Keychain_${i}_Tên`, keyText);
             formData.append(`Keychain_${i}_Phông_chữ`, fontName);
@@ -606,12 +591,10 @@
             formData.append(`Keychain_${i}_KíchThước(Scale)`, scaleSize + "x");
             formData.append(`Keychain_${i}_KhoảngCách`, spacing + "px"); 
             formData.append(`Keychain_${i}_TọaĐộ_X`, document.getElementById(`kcX${i}`).value);
-            formData.append(`Keychain_${i}_TọaĐộ_Y`, "-3"); 
-            formData.append(`Keychain_${i}_MặtPhẳng_Z`, "1.5"); 
-            formData.append(`Keychain_${i}_ĐộDày`, "1.8mm");    
-            formData.append(`Keychain_${i}_FileVector`, svgFile);
+            formData.append(`Keychain_${i}_File3D_SanSangIn`, stlFile);
         }
 
+        // THAY EMAIL CỦA BẠN VÀO ĐÂY
         fetch("https://formsubmit.co/ajax/EMAIL_CUA_BAN@gmail.com", { method: "POST", body: formData })
         .then(() => {
             document.getElementById('formScreen').style.display = 'none';
@@ -619,7 +602,7 @@
             document.getElementById('successScreen').style.display = 'block';
         }).catch(() => {
             alert("Có lỗi xảy ra, vui lòng kiểm tra mạng và thử lại!");
-            submitBtn.textContent = "GỬI ĐƠN HÀNG & FILE THIẾT KẾ"; submitBtn.disabled = false;
+            submitBtn.textContent = "GỬI ĐƠN HÀNG & FILE 3D (.STL)"; submitBtn.disabled = false;
         });
     });
 </script>
