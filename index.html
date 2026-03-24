@@ -50,6 +50,26 @@
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: rgba(255,255,255,0.2); border-radius: 5px; }
         
         #dynamicSections { display: none; opacity: 0; transform: translateY(-20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        /* --- THÊM ĐOẠN NÀY VÀO CSS --- */
+        #agreementBox {
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px; padding: 20px; margin-bottom: 20px;
+            display: none; animation: fadeIn 0.5s ease;
+        }
+        #agreementText {
+            background: rgba(15, 23, 42, 0.8); color: #cbd5e1;
+            padding: 15px; border-radius: 12px; height: 160px;
+            overflow-y: auto; font-size: 13px; line-height: 1.6;
+            border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;
+        }
+        #agreementText::-webkit-scrollbar { width: 6px; }
+        #agreementText::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.5); border-radius: 10px; }
+        .agree-btn-group { display: flex; gap: 10px; }
+        .btn-half { flex: 1; padding: 12px; font-size: 14px; margin-top: 0; border-radius: 10px;}
+        #agreeBtn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        #agreeBtn:hover { box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.5); }
+        #disagreeBtn { background: rgba(255,255,255,0.1); color: #e2e8f0; box-shadow: none;}
+        /* --------------------------- */
         #dynamicSections.visible { opacity: 1; transform: translateY(0); }
 
         .payment-box { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
@@ -116,7 +136,89 @@
             <label><input type="radio" name="quantity" value="3"> 3 Keychain</label>
         </div>
     </div>
+<div id="agreementBox">
+        <h4 style="color: #fca5a5; margin-top: 0; margin-bottom: 10px; font-size: 15px; text-transform: uppercase;">⚠️ Lưu ý quan trọng</h4>
+        <div id="agreementText">
+            <p style="margin-top: 0;">Vui lòng đọc kỹ các lưu ý sau trước khi tiến hành thanh toán và thiết kế:</p>
+            <ul style="padding-left: 15px; margin-bottom: 0;">
+                <li style="margin-bottom: 10px;">Sản phẩm được <strong>in 3D từng món</strong> (không phải đút khuôn hàng loạt). Vì thế, bề mặt sản phẩm có thể có nhựa thừa, tơ nhựa hoặc rỗ nhẹ. Bạn có thể tự loại bỏ chúng dễ dàng bằng tay hoặc dao nhỏ.</li>
+                <li><strong>QUAN TRỌNG:</strong> Khi bạn tự điều chỉnh kích thước chữ (Scale), vị trí và khoảng cách, vui lòng cân nhắc tính logic của thiết kế BỞI VÌ:
+                    <ul style="padding-left: 15px; margin-top: 5px;">
+                        <li style="margin-bottom: 5px; color: #6ee7b7;">Nếu vị trí chữ <strong>nằm gọn trong phạm vi khung cà vạt</strong>: Bọn mình sẽ in nguyên bản mà không chủ động sửa lại giúp các bạn.</li>
+                        <li style="color: #fcd34d;">Nếu vị trí chữ <strong>nằm tràn ra ngoài phạm vi khung cà vạt</strong>: Bọn mình sẵn sàng hỗ trợ chủ động sửa lại cho các bạn, nhưng sẽ tốn thời gian lâu hơn bình thường.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p style="text-align: center; color: #94a3b8; font-style: italic; margin-top: 20px; font-weight: bold;">(Hãy lướt xuống cuối để xác nhận)</p>
+        </div>
+        <div class="agree-btn-group">
+            <button type="button" id="disagreeBtn" class="btn-half" disabled>Không đồng ý</button>
+            <button type="button" id="agreeBtn" class="btn-half" disabled>Tôi đã hiểu & Đồng ý</button>
+        </div>
+    </div>
+    ```
 
+### BƯỚC 3: Sửa Logic JavaScript (Bắt buộc phải lướt mới cho bấm)
+Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn code xử lý khi bấm chọn Số lượng, bắt đầu bằng dòng:
+`document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {`
+
+**Hãy XÓA toàn bộ khối đó (từ `document.getElementsByName...` đến dấu `}));`) và THAY THẾ bằng đoạn code dưới đây:**
+
+```javascript
+    // --- BẮT ĐẦU ĐOẠN JAVASCRIPT THAY THẾ ---
+    const agreementBox = document.getElementById('agreementBox');
+    const agreementText = document.getElementById('agreementText');
+    const agreeBtn = document.getElementById('agreeBtn');
+    const disagreeBtn = document.getElementById('disagreeBtn');
+    const dynSec = document.getElementById('dynamicSections');
+
+    document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {
+        currentQuantity = parseInt(e.target.value);
+        
+        // Hiện Box Lưu ý thay vì hiện phần 3D ngay lập tức
+        if (dynSec.style.display !== 'block') {
+            agreementBox.style.display = 'block';
+            agreementText.scrollTop = 0; // Đưa thanh cuộn lên đầu
+            agreeBtn.disabled = true;
+            disagreeBtn.disabled = true;
+            agreeBtn.textContent = "Vuốt xuống để xác nhận...";
+        }
+
+        document.getElementById('paymentText').textContent = qrData[currentQuantity].text;
+        document.getElementById('paymentQR').src = qrData[currentQuantity].qr;
+        
+        document.getElementById('kcSection1').classList.toggle('active', currentQuantity >= 1);
+        document.getElementById('kcSection2').classList.toggle('active', currentQuantity >= 2);
+        document.getElementById('kcSection3').classList.toggle('active', currentQuantity >= 3);
+    }));
+
+    // Bắt sự kiện khi khách hàng lướt đọc
+    agreementText.addEventListener('scroll', () => {
+        // Kiểm tra xem đã lướt đến đáy chưa (trừ hao 5px sai số thiết bị)
+        if (agreementText.scrollTop + agreementText.clientHeight >= agreementText.scrollHeight - 5) {
+            agreeBtn.disabled = false;
+            disagreeBtn.disabled = false;
+            agreeBtn.textContent = "Tôi đã hiểu & Đồng ý";
+        }
+    });
+
+    // Nút KHÔNG ĐỒNG Ý
+    disagreeBtn.addEventListener('click', () => {
+        agreementBox.style.display = 'none';
+        document.getElementsByName('quantity').forEach(r => r.checked = false); // Bỏ chọn số lượng
+        currentQuantity = 0;
+    });
+
+    // Nút ĐỒNG Ý
+    agreeBtn.addEventListener('click', () => {
+        agreementBox.style.display = 'none'; // Tắt bảng lưu ý
+        dynSec.style.display = 'block'; // Bật phần thanh toán & 3D lên
+        setTimeout(() => { dynSec.classList.add('visible'); }, 20); 
+        
+        // Render canvas 3D
+        setTimeout(() => { viewers.forEach(v => { if(v.index <= currentQuantity) v.resize(); }); }, 300);
+    });
+    // --- KẾT THÚC ĐOẠN JAVASCRIPT THAY THẾ ---
     <div id="dynamicSections">
         <h3>3. Thanh Toán</h3>
         <div class="payment-box" id="paymentBox">
