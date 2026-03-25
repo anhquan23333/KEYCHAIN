@@ -334,7 +334,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">2</span> px</label>
-                    <input type="range" id="kcSpace3" min="-4" max="15" value="2" step="1">
+                    <input type="range" id="kcSpace3" min="-2" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
@@ -398,17 +398,13 @@
         }
     };
 
-    // Toggle Input Text Trường học
+    // Toggle Input Text
     document.getElementsByName('school').forEach(r => r.addEventListener('change', () => {
         document.getElementById('schoolOtherText').style.display = document.getElementById('schoolOtherRadio').checked ? 'block' : 'none';
     }));
-
-    // Toggle Input Text Địa chỉ
     document.getElementsByName('deliveryLocation').forEach(r => r.addEventListener('change', () => {
         document.getElementById('locHomeText').style.display = document.getElementById('locHomeRadio').checked ? 'block' : 'none';
     }));
-
-    // Toggle Input Text SĐT nhận hàng
     document.getElementsByName('recipientPhone').forEach(r => r.addEventListener('change', () => {
         document.getElementById('phoneOtherText').style.display = document.getElementById('phoneOtherRadio').checked ? 'block' : 'none';
     }));
@@ -628,7 +624,11 @@
             }
 
             const posX = parseFloat(inputX.value);
-            const posY = 0; 
+            
+            // 👇 CHỈNH SỬA TỌA ĐỘ Y (LÊN/XUỐNG) CỦA FONT Ở ĐÂY 👇
+            // fontKey === 'tallfont' là font Anton, ngược lại là Montserrat
+            const posY = (fontKey === 'tallfont') ? 0.4 : 0; 
+            
             const posZ = 0.3; 
             
             textGroup.position.set(posX, posY, posZ); 
