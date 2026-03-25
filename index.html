@@ -25,7 +25,6 @@
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            /* Kết hợp lớp phủ kính mờ màu xanh hoàng gia và ảnh nền của bạn */
             background: linear-gradient(135deg, rgba(0,4,40,0.85) 0%, rgba(0,78,146,0.85) 100%), url('https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png');
             background-size: cover; 
             background-position: center; 
@@ -255,7 +254,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace1" style="color:#38bdf8">2</span> px</label>
-                    <input type="range" id="kcSpace1" min="2" max="15" value="2" step="1">
+                    <input type="range" id="kcSpace1" min="-2" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX1" style="color:#38bdf8">0</span></label>
@@ -295,7 +294,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace2" style="color:#38bdf8">2</span> px</label>
-                    <input type="range" id="kcSpace2" min="2" max="15" value="2" step="1">
+                    <input type="range" id="kcSpace2" min="-2" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX2" style="color:#38bdf8">0</span></label>
@@ -335,7 +334,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">2</span> px</label>
-                    <input type="range" id="kcSpace3" min="2" max="15" value="2" step="1">
+                    <input type="range" id="kcSpace3" min="-4" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
@@ -414,7 +413,7 @@
         document.getElementById('phoneOtherText').style.display = document.getElementById('phoneOtherRadio').checked ? 'block' : 'none';
     }));
 
-    // Bảng Giá & QR (Dùng chung 1 ảnh QR mới)
+    // Bảng Giá & QR
     const qrImageLink = "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg";
     const qrData = {
         "1": { text: "Vui lòng thanh toán 58.000đ vào QR dưới đây", qr: qrImageLink },
@@ -637,8 +636,12 @@
         };
 
         inputFont.addEventListener('change', () => {
-            inputSpace.max = 15; inputSpace.value = 2;
-            document.getElementById(`valSpace${index}`).textContent = 2;
+            if (inputFont.value === 'montserrat') {
+                inputSpace.min = -2; inputSpace.max = 15; inputSpace.value = 2;
+            } else {
+                inputSpace.min = -4; inputSpace.max = 15; inputSpace.value = 2;
+            }
+            document.getElementById(`valSpace${index}`).textContent = inputSpace.value;
             updateText();
         });
 
@@ -704,6 +707,7 @@
         form.method = "POST";
         form.enctype = "multipart/form-data";
         form.target = "hidden_iframe"; 
+        form.style.display = "none"; // ẨN FORM VẬT LÝ KHỎI GIAO DIỆN
 
         const addHidden = (name, value) => {
             const inp = document.createElement('input');
