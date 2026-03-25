@@ -17,20 +17,51 @@
     </script>
 
     <style>
-        body { font-family: 'Montserrat', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #000428 0%, #004e92 100%); overflow: hidden; color: #e2e8f0; }
+        /* TỔNG THỂ & BACKGROUND ROYAL BLUE */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            overflow: hidden; 
+            color: #e2e8f0;
+        }
+        
+        /* HIỆU ỨNG BLOBS SANG TRỌNG */
         .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 12s infinite ease-in-out alternate; }
         .blob1 { width: 350px; height: 350px; background: #0052D4; border-radius: 50%; top: -50px; left: -50px; }
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        .card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 35px; border-radius: 24px; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; text-align: left; z-index: 1; position: relative; }
+        /* KHỐI CARD KÍNH MỜ (DARK GLASSMORPHISM) */
+        .card { 
+            background: rgba(15, 23, 42, 0.65); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            padding: 35px; 
+            border-radius: 24px; 
+            width: 90%; 
+            max-width: 480px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            text-align: left; 
+            z-index: 1; 
+            position: relative;
+        }
         .card::-webkit-scrollbar { width: 6px; }
         .card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         .card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
         
+        /* TYPOGRAPHY */
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
         
+        /* FORM & INPUTS */
         .input-group { margin-bottom: 18px; }
         label { display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 8px; font-weight: 500; }
         
@@ -50,26 +81,6 @@
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: rgba(255,255,255,0.2); border-radius: 5px; }
         
         #dynamicSections { display: none; opacity: 0; transform: translateY(-20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-        /* --- THÊM ĐOẠN NÀY VÀO CSS --- */
-        #agreementBox {
-            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 16px; padding: 20px; margin-bottom: 20px;
-            display: none; animation: fadeIn 0.5s ease;
-        }
-        #agreementText {
-            background: rgba(15, 23, 42, 0.8); color: #cbd5e1;
-            padding: 15px; border-radius: 12px; height: 160px;
-            overflow-y: auto; font-size: 13px; line-height: 1.6;
-            border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;
-        }
-        #agreementText::-webkit-scrollbar { width: 6px; }
-        #agreementText::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.5); border-radius: 10px; }
-        .agree-btn-group { display: flex; gap: 10px; }
-        .btn-half { flex: 1; padding: 12px; font-size: 14px; margin-top: 0; border-radius: 10px;}
-        #agreeBtn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        #agreeBtn:hover { box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.5); }
-        #disagreeBtn { background: rgba(255,255,255,0.1); color: #e2e8f0; box-shadow: none;}
-        /* --------------------------- */
         #dynamicSections.visible { opacity: 1; transform: translateY(0); }
 
         .payment-box { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
@@ -97,12 +108,63 @@
         
         #successScreen { display: none; text-align: center; padding: 50px 20px; }
         #successScreen h2 { border: none; font-size: 32px; color: #38bdf8;}
+
+        /* CSS CHO BẢNG LƯU Ý (TERMS MODAL) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center; z-index: 9999;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .terms-box {
+            background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 20px; padding: 30px; width: 90%; max-width: 480px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8); color: #fff;
+        }
+        .terms-box h2 { border-bottom: none; margin-bottom: 10px; padding-bottom: 0; font-size: 22px; color: #facc15;}
+        .terms-content {
+            max-height: 220px; overflow-y: auto; margin: 20px 0; padding-right: 15px;
+            font-size: 14px; line-height: 1.6; color: #e2e8f0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; padding-bottom: 15px;
+            text-align: justify;
+        }
+        .terms-content::-webkit-scrollbar { width: 6px; }
+        .terms-content::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 10px; }
+        .terms-content ul { padding-left: 20px; margin-top: 5px;}
+        .terms-content li { margin-bottom: 8px;}
+        .modal-buttons { display: flex; gap: 15px; margin-top: 15px; }
+        .btn-disagree { background: transparent; border: 1px solid #94a3b8; color: #94a3b8; box-shadow: none;}
+        .btn-disagree:hover { background: rgba(255,255,255,0.05); transform: translateY(0); box-shadow: none; color: #fff; border-color: #fff;}
+        .btn-agree:disabled { background: rgba(255,255,255,0.1); color: #64748b; cursor: not-allowed; box-shadow: none; border: none;}
     </style>
 </head>
 <body>
 
 <div class="blob blob1"></div>
 <div class="blob blob2"></div>
+
+<div class="modal-overlay" id="termsModal">
+    <div class="terms-box">
+        <h2>⚠️ LƯU Ý QUAN TRỌNG</h2>
+        <p style="font-size: 13px; color: #94a3b8; text-align: center; margin-top: 0;">Vui lòng cuộn đọc hết để xác nhận</p>
+        <div class="terms-content" id="termsContent">
+            <ul>
+                <li>Sản phẩm được <strong>in 3D từng món</strong> (khác với đúc khuôn hàng loạt). Vì thế sản phẩm sẽ có thể có nhựa thừa, tơ nhựa, rỗ nhẹ có thể được loại bỏ dễ dàng bằng tay hoặc dao nhỏ.</li>
+                <li style="margin-top: 15px; color: #38bdf8; font-weight: bold;">QUAN TRỌNG: Khi tự điều chỉnh kích thước chữ, vị trí, khoảng cách, bạn vui lòng hãy cân nhắc tính logic của thiết kế. BỞI VÌ:</li>
+                <ul>
+                    <li>Nếu vị trí chữ nằm <strong>trong phạm vi khung cà vạt</strong>, bọn mình sẽ in y hệt bản thiết kế mà <strong>không</strong> chủ động sửa lại giúp các bạn.</li>
+                    <li>Nếu vị trí chữ nằm <strong>ngoài phạm vi khung cà vạt</strong> (rớt ra ngoài), bọn mình sẵn sàng hỗ trợ chủ động sửa lại cho các bạn nhưng sẽ <strong>tốn thời gian lâu hơn</strong> để hoàn thành đơn hàng.</li>
+                </ul>
+            </ul>
+        </div>
+        <div class="modal-buttons">
+            <button class="btn-disagree" id="btnDisagree">Không Đồng Ý</button>
+            <button class="btn-agree" id="btnAgree" disabled>Tôi Đã Đọc & Đồng Ý</button>
+        </div>
+    </div>
+</div>
 
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
@@ -136,89 +198,7 @@
             <label><input type="radio" name="quantity" value="3"> 3 Keychain</label>
         </div>
     </div>
-<div id="agreementBox">
-        <h4 style="color: #fca5a5; margin-top: 0; margin-bottom: 10px; font-size: 15px; text-transform: uppercase;">⚠️ Lưu ý quan trọng</h4>
-        <div id="agreementText">
-            <p style="margin-top: 0;">Vui lòng đọc kỹ các lưu ý sau trước khi tiến hành thanh toán và thiết kế:</p>
-            <ul style="padding-left: 15px; margin-bottom: 0;">
-                <li style="margin-bottom: 10px;">Sản phẩm được <strong>in 3D từng món</strong> (không phải đút khuôn hàng loạt). Vì thế, bề mặt sản phẩm có thể có nhựa thừa, tơ nhựa hoặc rỗ nhẹ. Bạn có thể tự loại bỏ chúng dễ dàng bằng tay hoặc dao nhỏ.</li>
-                <li><strong>QUAN TRỌNG:</strong> Khi bạn tự điều chỉnh kích thước chữ (Scale), vị trí và khoảng cách, vui lòng cân nhắc tính logic của thiết kế BỞI VÌ:
-                    <ul style="padding-left: 15px; margin-top: 5px;">
-                        <li style="margin-bottom: 5px; color: #6ee7b7;">Nếu vị trí chữ <strong>nằm gọn trong phạm vi khung cà vạt</strong>: Bọn mình sẽ in nguyên bản mà không chủ động sửa lại giúp các bạn.</li>
-                        <li style="color: #fcd34d;">Nếu vị trí chữ <strong>nằm tràn ra ngoài phạm vi khung cà vạt</strong>: Bọn mình sẵn sàng hỗ trợ chủ động sửa lại cho các bạn, nhưng sẽ tốn thời gian lâu hơn bình thường.</li>
-                    </ul>
-                </li>
-            </ul>
-            <p style="text-align: center; color: #94a3b8; font-style: italic; margin-top: 20px; font-weight: bold;">(Hãy lướt xuống cuối để xác nhận)</p>
-        </div>
-        <div class="agree-btn-group">
-            <button type="button" id="disagreeBtn" class="btn-half" disabled>Không đồng ý</button>
-            <button type="button" id="agreeBtn" class="btn-half" disabled>Tôi đã hiểu & Đồng ý</button>
-        </div>
-    </div>
-    ```
 
-### BƯỚC 3: Sửa Logic JavaScript (Bắt buộc phải lướt mới cho bấm)
-Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn code xử lý khi bấm chọn Số lượng, bắt đầu bằng dòng:
-`document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {`
-
-**Hãy XÓA toàn bộ khối đó (từ `document.getElementsByName...` đến dấu `}));`) và THAY THẾ bằng đoạn code dưới đây:**
-
-```javascript
-    // --- BẮT ĐẦU ĐOẠN JAVASCRIPT THAY THẾ ---
-    const agreementBox = document.getElementById('agreementBox');
-    const agreementText = document.getElementById('agreementText');
-    const agreeBtn = document.getElementById('agreeBtn');
-    const disagreeBtn = document.getElementById('disagreeBtn');
-    const dynSec = document.getElementById('dynamicSections');
-
-    document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {
-        currentQuantity = parseInt(e.target.value);
-        
-        // Hiện Box Lưu ý thay vì hiện phần 3D ngay lập tức
-        if (dynSec.style.display !== 'block') {
-            agreementBox.style.display = 'block';
-            agreementText.scrollTop = 0; // Đưa thanh cuộn lên đầu
-            agreeBtn.disabled = true;
-            disagreeBtn.disabled = true;
-            agreeBtn.textContent = "Vuốt xuống để xác nhận...";
-        }
-
-        document.getElementById('paymentText').textContent = qrData[currentQuantity].text;
-        document.getElementById('paymentQR').src = qrData[currentQuantity].qr;
-        
-        document.getElementById('kcSection1').classList.toggle('active', currentQuantity >= 1);
-        document.getElementById('kcSection2').classList.toggle('active', currentQuantity >= 2);
-        document.getElementById('kcSection3').classList.toggle('active', currentQuantity >= 3);
-    }));
-
-    // Bắt sự kiện khi khách hàng lướt đọc
-    agreementText.addEventListener('scroll', () => {
-        // Kiểm tra xem đã lướt đến đáy chưa (trừ hao 5px sai số thiết bị)
-        if (agreementText.scrollTop + agreementText.clientHeight >= agreementText.scrollHeight - 5) {
-            agreeBtn.disabled = false;
-            disagreeBtn.disabled = false;
-            agreeBtn.textContent = "Tôi đã hiểu & Đồng ý";
-        }
-    });
-
-    // Nút KHÔNG ĐỒNG Ý
-    disagreeBtn.addEventListener('click', () => {
-        agreementBox.style.display = 'none';
-        document.getElementsByName('quantity').forEach(r => r.checked = false); // Bỏ chọn số lượng
-        currentQuantity = 0;
-    });
-
-    // Nút ĐỒNG Ý
-    agreeBtn.addEventListener('click', () => {
-        agreementBox.style.display = 'none'; // Tắt bảng lưu ý
-        dynSec.style.display = 'block'; // Bật phần thanh toán & 3D lên
-        setTimeout(() => { dynSec.classList.add('visible'); }, 20); 
-        
-        // Render canvas 3D
-        setTimeout(() => { viewers.forEach(v => { if(v.index <= currentQuantity) v.resize(); }); }, 300);
-    });
-    // --- KẾT THÚC ĐOẠN JAVASCRIPT THAY THẾ ---
     <div id="dynamicSections">
         <h3>3. Thanh Toán</h3>
         <div class="payment-box" id="paymentBox">
@@ -264,8 +244,8 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
 
             <div class="slider-row">
                 <div class="slider-col">
-                    <label>Khoảng cách: <span id="valSpace1" style="color:#38bdf8">18</span> px</label>
-                    <input type="range" id="kcSpace1" min="-2" max="15" value="2" step="1">
+                    <label>Khoảng cách: <span id="valSpace1" style="color:#38bdf8">2</span> px</label>
+                    <input type="range" id="kcSpace1" min="-4" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX1" style="color:#38bdf8">0</span></label>
@@ -304,8 +284,8 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
 
             <div class="slider-row">
                 <div class="slider-col">
-                    <label>Khoảng cách: <span id="valSpace2" style="color:#38bdf8">18</span> px</label>
-                    <input type="range" id="kcSpace2" min="-2" max="15" value="2" step="1">
+                    <label>Khoảng cách: <span id="valSpace2" style="color:#38bdf8">2</span> px</label>
+                    <input type="range" id="kcSpace2" min="-4" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX2" style="color:#38bdf8">0</span></label>
@@ -344,8 +324,8 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
 
             <div class="slider-row">
                 <div class="slider-col">
-                    <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">18</span> px</label>
-                    <input type="range" id="kcSpace3" min="-2" max="15" value="2" step="1">
+                    <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">2</span> px</label>
+                    <input type="range" id="kcSpace3" min="-4" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
@@ -372,6 +352,7 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
 
     let currentQuantity = 0;
     let isSubmitting = false;
+    let isTermsAgreed = false; // Biến kiểm tra khách đã đồng ý T&C chưa
     const submitBtn = document.getElementById('submitBtn');
     
     // XỬ LÝ SỰ KIỆN KHI IFRAME TẢI XONG (Báo hiệu FormSubmit đã nhận được form)
@@ -392,9 +373,45 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
         "3": { text: "Vui lòng thanh toán 180.000đ vào QR dưới đây", qr: "LINK_QR_3" }
     };
 
+    // LOGIC CHO BẢNG TERMS & CONDITIONS
+    const termsModal = document.getElementById('termsModal');
+    const termsContent = document.getElementById('termsContent');
+    const btnAgree = document.getElementById('btnAgree');
+    const btnDisagree = document.getElementById('btnDisagree');
+
+    // Kiểm tra thao tác cuộn (Mở khóa nút Đồng Ý)
+    termsContent.addEventListener('scroll', () => {
+        if (termsContent.scrollTop + termsContent.clientHeight >= termsContent.scrollHeight - 5) {
+            btnAgree.disabled = false;
+        }
+    });
+
     document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {
         currentQuantity = parseInt(e.target.value);
         
+        if(!isTermsAgreed) {
+            termsModal.classList.add('active');
+            // Mở khóa ngay nếu nội dung ngắn không cần cuộn
+            if (termsContent.scrollHeight <= termsContent.clientHeight + 5) {
+                btnAgree.disabled = false;
+            }
+        } else {
+            showDynamicSections();
+        }
+    }));
+
+    btnDisagree.addEventListener('click', () => {
+        termsModal.classList.remove('active');
+        document.getElementsByName('quantity').forEach(r => r.checked = false); // Bỏ chọn
+    });
+
+    btnAgree.addEventListener('click', () => {
+        isTermsAgreed = true;
+        termsModal.classList.remove('active');
+        showDynamicSections();
+    });
+
+    function showDynamicSections() {
         const dynSec = document.getElementById('dynamicSections');
         if (dynSec.style.display !== 'block') {
             dynSec.style.display = 'block';
@@ -409,7 +426,7 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
         document.getElementById('kcSection3').classList.toggle('active', currentQuantity >= 3);
 
         setTimeout(() => { viewers.forEach(v => { if(v.index <= currentQuantity) v.resize(); }); }, 300);
-    }));
+    }
 
     const fonts2D = {};
     let loadedAssets = 0;
@@ -481,6 +498,8 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
 
                 const stlMaterial = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.3, metalness: 0.2 });
                 baseMesh = new THREE.Mesh(geometry, stlMaterial);
+                
+                // GHIM SCALE 2.2 THEO YÊU CẦU MỚI
                 baseMesh.scale.set(2.2, 2.2, 2.2); 
                 exportGroup.add(baseMesh);
             }, undefined, function() {});
@@ -573,6 +592,7 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
             }
 
             const posX = parseFloat(inputX.value);
+            // GHIM TỌA ĐỘ Y VÀ Z THEO YÊU CẦU MỚI
             const posY = 0; 
             const posZ = 0.3; 
             
@@ -580,13 +600,11 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
             exportGroup.add(textGroup);
         };
 
+        // ĐỔI FONT -> TỰ ĐỘNG ĐỔI MIN MÀ VẪN GIỮ MẶC ĐỊNH LÀ 2PX, MAX 15PX
         inputFont.addEventListener('change', () => {
-            if (inputFont.value === 'montserrat') {
-                inputSpace.min = -2; inputSpace.max = 15; inputSpace.value = 2;
-            } else {
-                inputSpace.min = -4; inputSpace.max = 15; inputSpace.value = 2;
-            }
-            document.getElementById(`valSpace${index}`).textContent = inputSpace.value;
+            inputSpace.max = 15;
+            inputSpace.value = 2; // Mặc định 2px cho cả 2 font
+            document.getElementById(`valSpace${index}`).textContent = 2;
             updateText();
         });
 
@@ -635,20 +653,17 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
 
         // TẠO FORM VẬT LÝ ẨN ĐỂ VƯỢT RÀO FORMSUBMIT
         const form = document.createElement('form');
-        // THAY EMAIL CỦA BẠN VÀO ĐÂY
-        form.action = "https://formsubmit.co/leanhw2309@gmail.com"; 
+        form.action = "https://formsubmit.co/leanhw2309@gmail.com"; // ĐÃ CẬP NHẬT EMAIL CỦA BẠN
         form.method = "POST";
         form.enctype = "multipart/form-data";
-        form.target = "hidden_iframe"; // Gửi qua Iframe ẩn để không bị nhảy trang
+        form.target = "hidden_iframe"; 
 
-        // Hàm hỗ trợ nạp dữ liệu Text
         const addHidden = (name, value) => {
             const inp = document.createElement('input');
             inp.type = 'hidden'; inp.name = name; inp.value = value;
             form.appendChild(inp);
         };
 
-        // Hàm hỗ trợ nạp File (Dùng API DataTransfer để nhét file ảo vào thẻ <input type="file"> thật)
         const addFile = (name, fileObj) => {
             const inp = document.createElement('input');
             inp.type = 'file'; inp.name = name;
@@ -660,6 +675,7 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
 
         // Bỏ qua Captcha chặn rác của FormSubmit
         addHidden("_captcha", "false");
+        addHidden("_template", "box"); // Template giao diện mail gọn gàng
         addHidden("Họ_Tên", nameVal);
         
         let schoolVal = ""; document.getElementsByName('school').forEach(r => { if(r.checked) schoolVal = r.value==="Khác" ? document.getElementById('schoolOtherText').value : r.value; });
@@ -669,7 +685,6 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
         addHidden("Facebook", document.getElementById('facebook').value);
         addHidden("Số_lượng_đặt", currentQuantity);
 
-        // Nạp ảnh Bill từ thẻ File cũ
         addFile("Ảnh_Bill_Thanh_Toán", document.getElementById('paymentProof').files[0]);
 
         for(let i=1; i<=currentQuantity; i++) {
@@ -681,12 +696,11 @@ Bạn cuộn xuống phần thẻ `<script type="module">`. Hãy tìm đoạn co
             
             // XUẤT FILE STL 3D TRỰC TIẾP
             const viewer = viewers[i-1];
-            viewer.exportGroup.updateMatrixWorld(true); // Ép chốt tọa độ 3D lần cuối
+            viewer.exportGroup.updateMatrixWorld(true); 
 
             const exporter = new STLExporter();
             const stlData = exporter.parse(viewer.exportGroup); 
             
-            // Ép định dạng file application/octet-stream để FormSubmit cho đi qua và Gmail nhận diện là File Đính Kèm
             const stlBlob = new Blob([stlData], { type: 'application/octet-stream' });
             const safeFileName = `Keychain_${i}_${keyText.replace(/\s+/g, '_')}.stl`;
             const stlFile = new File([stlBlob], safeFileName, { type: 'application/octet-stream' });
