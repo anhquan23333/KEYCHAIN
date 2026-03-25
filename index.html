@@ -17,20 +17,71 @@
     </script>
 
     <style>
-        body { font-family: 'Montserrat', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #000428 0%, #004e92 100%); overflow: hidden; color: #e2e8f0; }
+        /* TỔNG THỂ & BACKGROUND ROYAL BLUE */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            overflow: hidden; 
+            color: #e2e8f0;
+            position: relative;
+        }
+        
+        /* HIỆU ỨNG BLOBS SANG TRỌNG */
         .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 12s infinite ease-in-out alternate; }
         .blob1 { width: 350px; height: 350px; background: #0052D4; border-radius: 50%; top: -50px; left: -50px; }
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        .card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 35px; border-radius: 24px; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; text-align: left; z-index: 1; position: relative; }
+        /* BACKGROUND ẢNH CHUYỂN ĐỘNG */
+        .bg-floating-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 85%;
+            max-width: 500px;
+            opacity: 0.12;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            animation: floatImg 15s infinite ease-in-out alternate;
+            pointer-events: none;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+        }
+        @keyframes floatImg {
+            0% { transform: translate(-50%, -50%) rotate(-3deg) scale(1); }
+            100% { transform: translate(-50%, -53%) rotate(3deg) scale(1.05); }
+        }
+
+        /* KHỐI CARD KÍNH MỜ (DARK GLASSMORPHISM) */
+        .card { 
+            background: rgba(15, 23, 42, 0.65); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            padding: 35px; 
+            border-radius: 24px; 
+            width: 90%; 
+            max-width: 480px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            text-align: left; 
+            z-index: 1; 
+            position: relative;
+        }
         .card::-webkit-scrollbar { width: 6px; }
         .card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         .card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
         
+        /* TYPOGRAPHY */
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
         
+        /* FORM & INPUTS */
         .input-group { margin-bottom: 18px; }
         label { display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 8px; font-weight: 500; }
         
@@ -54,7 +105,7 @@
 
         .payment-box { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
         .payment-box img { max-width: 160px; border-radius: 12px; margin: 12px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.4);}
-        .payment-box p { font-size: 14px; color: #38bdf8; font-weight: 600; margin: 5px 0;}
+        .payment-box p { font-size: 15px; color: #38bdf8; font-weight: bold; margin: 5px 0;}
         .payment-note { font-size: 13px; color: #94a3b8; font-weight: 500; }
 
         .keychain-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 25px; display: none; animation: fadeIn 0.5s ease; }
@@ -114,6 +165,8 @@
 <div class="blob blob1"></div>
 <div class="blob blob2"></div>
 
+<img src="https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png" class="bg-floating-img" alt="Background Logo">
+
 <div class="modal-overlay" id="termsModal">
     <div class="terms-box">
         <h2>⚠️ LƯU Ý QUAN TRỌNG</h2>
@@ -171,8 +224,8 @@
     <div id="dynamicSections">
         <h3>3. Thanh Toán</h3>
         <div class="payment-box" id="paymentBox">
-            <p id="paymentText">Vui lòng thanh toán 62.000đ vào QR dưới đây</p>
-            <img id="paymentQR" src="LINK_QR_1" alt="QR Chuyển Khoản">
+            <p id="paymentText">Vui lòng thanh toán 58.000đ vào QR dưới đây</p>
+            <img id="paymentQR" src="https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" alt="QR Chuyển Khoản">
             <div class="payment-note">Nội dung: Họ và tên + SĐT</div>
         </div>
 
@@ -303,6 +356,26 @@
             </div>
         </div>
 
+        <h3>5. Giao & Nhận Hàng</h3>
+        <div class="input-group">
+            <label>Chọn nơi nhận hàng:</label>
+            <div class="radio-group" style="flex-direction: column; gap: 5px;">
+                <label><input type="radio" name="delivery" value="Lớp 12A6 Trường THPT Châu Văn Liêm" checked> Lớp 12A6 THPT Châu Văn Liêm</label>
+                <label><input type="radio" name="delivery" value="Circle K đường Mạc Thiên Tích"> Circle K đường Mạc Thiên Tích</label>
+                <label><input type="radio" name="delivery" value="Nhà riêng" id="deliveryHomeRadio"> Địa chỉ nhà riêng (ghi rõ):</label>
+            </div>
+            <input type="text" id="deliveryHomeText" placeholder="Nhập địa chỉ nhà của bạn..." style="display:none; margin-top:10px;">
+        </div>
+
+        <div class="input-group">
+            <label>Số điện thoại người nhận:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="deliveryPhone" value="Tương tự SĐT đặt hàng" checked> Tương tự SĐT đặt hàng</label>
+                <label><input type="radio" name="deliveryPhone" value="Số khác" id="deliveryPhoneOtherRadio"> Số khác:</label>
+            </div>
+            <input type="text" id="deliveryPhoneOtherText" placeholder="Nhập SĐT người nhận..." style="display:none; margin-top:10px;">
+        </div>
+
         <button id="submitBtn" disabled>HỆ THỐNG ĐANG KHỞI TẠO 3D...</button>
     </div>
 </div>
@@ -335,10 +408,19 @@
         document.getElementById('schoolOtherText').style.display = document.getElementById('schoolOtherRadio').checked ? 'block' : 'none';
     }));
 
+    // LOGIC ẨN HIỆN CHO PHẦN GIAO HÀNG
+    document.getElementsByName('delivery').forEach(r => r.addEventListener('change', () => {
+        document.getElementById('deliveryHomeText').style.display = document.getElementById('deliveryHomeRadio').checked ? 'block' : 'none';
+    }));
+    document.getElementsByName('deliveryPhone').forEach(r => r.addEventListener('change', () => {
+        document.getElementById('deliveryPhoneOtherText').style.display = document.getElementById('deliveryPhoneOtherRadio').checked ? 'block' : 'none';
+    }));
+
+    // BẢNG GIÁ MỚI VÀ 1 QR CODE CHUNG
     const qrData = {
-        "1": { text: "Vui lòng thanh toán 62.000đ vào QR dưới đây", qr: "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" },
-        "2": { text: "Vui lòng thanh toán 120.000đ vào QR dưới đây", qr: "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" },
-        "3": { text: "Vui lòng thanh toán 180.000đ vào QR dưới đây", qr: "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" }
+        "1": { text: "Vui lòng thanh toán 58.000đ vào QR dưới đây", qr: "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" },
+        "2": { text: "Vui lòng thanh toán 110.000đ vào QR dưới đây", qr: "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" },
+        "3": { text: "Vui lòng thanh toán 155.000đ vào QR dưới đây", qr: "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" }
     };
 
     const termsModal = document.getElementById('termsModal');
@@ -607,6 +689,16 @@
         if (!nameVal) { alert('Vui lòng điền Họ Tên!'); return; }
         if (!document.getElementById('paymentProof').files[0]) { alert("Vui lòng tải lên ảnh màn hình thanh toán!"); return; }
 
+        // Validate phần Giao Hàng Mới
+        const isHomeRadioChecked = document.getElementById('deliveryHomeRadio').checked;
+        const isPhoneOtherChecked = document.getElementById('deliveryPhoneOtherRadio').checked;
+        if(isHomeRadioChecked && !document.getElementById('deliveryHomeText').value.trim()) {
+            alert('Vui lòng nhập địa chỉ Nhà Riêng để giao hàng!'); return;
+        }
+        if(isPhoneOtherChecked && !document.getElementById('deliveryPhoneOtherText').value.trim()) {
+            alert('Vui lòng nhập Số điện thoại người nhận!'); return;
+        }
+
         for(let i=1; i<=currentQuantity; i++) {
             if(!document.getElementById(`kcName${i}`).value.trim()) { alert(`Vui lòng nhập Tên in cho Keychain #${i}`); return; }
         }
@@ -643,9 +735,21 @@
         let schoolVal = ""; document.getElementsByName('school').forEach(r => { if(r.checked) schoolVal = r.value==="Khác" ? document.getElementById('schoolOtherText').value : r.value; });
         addHidden("Trường", schoolVal);
         addHidden("Lớp", document.getElementById('className').value);
-        addHidden("SĐT", document.getElementById('phone').value);
+        addHidden("SĐT_Đặt_hàng", document.getElementById('phone').value);
         addHidden("Facebook", document.getElementById('facebook').value);
         addHidden("Số_lượng_đặt", currentQuantity);
+
+        // Ghi nhận mục Giao Hàng Mới
+        let deliveryVal = "";
+        document.getElementsByName('delivery').forEach(r => { 
+            if(r.checked) deliveryVal = r.value === "Nhà riêng" ? document.getElementById('deliveryHomeText').value : r.value; 
+        });
+        let deliveryPhoneVal = "";
+        document.getElementsByName('deliveryPhone').forEach(r => {
+            if(r.checked) deliveryPhoneVal = r.value === "Số khác" ? document.getElementById('deliveryPhoneOtherText').value : document.getElementById('phone').value;
+        });
+        addHidden("Địa_điểm_nhận", deliveryVal);
+        addHidden("SĐT_Người_nhận", deliveryPhoneVal);
 
         addFile("Ảnh_Bill_Thanh_Toán", document.getElementById('paymentProof').files[0]);
 
