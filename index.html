@@ -17,7 +17,7 @@
     </script>
 
     <style>
-        /* TỔNG THỂ & BACKGROUND ROYAL BLUE */
+        /* TỔNG THỂ & BACKGROUND CHUYỂN ĐỘNG */
         body { 
             font-family: 'Montserrat', sans-serif; 
             margin: 0; 
@@ -25,43 +25,29 @@
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            /* Kết hợp lớp phủ kính mờ màu xanh hoàng gia và ảnh nền của bạn */
+            background: linear-gradient(135deg, rgba(0,4,40,0.85) 0%, rgba(0,78,146,0.85) 100%), url('https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png');
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
+            animation: backgroundZoom 20s infinite alternate ease-in-out;
             overflow: hidden; 
             color: #e2e8f0;
-            position: relative;
         }
+        @keyframes backgroundZoom { 0% { transform: scale(1); } 100% { transform: scale(1.08); } }
         
         /* HIỆU ỨNG BLOBS SANG TRỌNG */
-        .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 12s infinite ease-in-out alternate; }
+        .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.5; animation: float 12s infinite ease-in-out alternate; }
         .blob1 { width: 350px; height: 350px; background: #0052D4; border-radius: 50%; top: -50px; left: -50px; }
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        /* BACKGROUND ẢNH CHUYỂN ĐỘNG */
-        .bg-floating-img {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 85%;
-            max-width: 500px;
-            opacity: 0.12;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            animation: floatImg 15s infinite ease-in-out alternate;
-            pointer-events: none;
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
-        }
-        @keyframes floatImg {
-            0% { transform: translate(-50%, -50%) rotate(-3deg) scale(1); }
-            100% { transform: translate(-50%, -53%) rotate(3deg) scale(1.05); }
-        }
-
         /* KHỐI CARD KÍNH MỜ (DARK GLASSMORPHISM) */
         .card { 
-            background: rgba(15, 23, 42, 0.65); 
+            background: rgba(15, 23, 42, 0.7); 
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
             padding: 35px; 
             border-radius: 24px; 
@@ -90,9 +76,9 @@
         .radio-group label:hover { color: #38bdf8; }
         input[type="radio"] { accent-color: #38bdf8; transform: scale(1.2); margin-right: 8px; cursor: pointer;}
         
-        input[type="text"], input[type="file"], select { width: 100%; padding: 14px 16px; font-size: 14px; font-family: 'Montserrat', sans-serif; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; outline: none; transition: all 0.3s ease; box-sizing: border-box; color: #ffffff; font-weight: 500; }
-        input[type="text"]::placeholder { color: rgba(255,255,255,0.3); font-weight: 400;}
-        input[type="text"]:focus, select:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.5); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
+        input[type="text"], input[type="file"], select { width: 100%; padding: 14px 16px; font-size: 14px; font-family: 'Montserrat', sans-serif; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; outline: none; transition: all 0.3s ease; box-sizing: border-box; color: #ffffff; font-weight: 500; }
+        input[type="text"]::placeholder { color: rgba(255,255,255,0.4); font-weight: 400;}
+        input[type="text"]:focus, select:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
         select option { background: #0f172a; color: #fff; }
 
         input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; margin: 10px 0; }
@@ -103,12 +89,12 @@
         #dynamicSections { display: none; opacity: 0; transform: translateY(-20px); transition: opacity 0.6s ease, transform 0.6s ease; }
         #dynamicSections.visible { opacity: 1; transform: translateY(0); }
 
-        .payment-box { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .payment-box { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
         .payment-box img { max-width: 160px; border-radius: 12px; margin: 12px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.4);}
-        .payment-box p { font-size: 15px; color: #38bdf8; font-weight: bold; margin: 5px 0;}
-        .payment-note { font-size: 13px; color: #94a3b8; font-weight: 500; }
+        .payment-box p { font-size: 15px; color: #facc15; font-weight: 700; margin: 5px 0;}
+        .payment-note { font-size: 13px; color: #cbd5e1; font-weight: 500; }
 
-        .keychain-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 25px; display: none; animation: fadeIn 0.5s ease; }
+        .keychain-section { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; margin-bottom: 25px; display: none; animation: fadeIn 0.5s ease; }
         .keychain-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -124,10 +110,10 @@
         button { width: 100%; font-family: 'Montserrat', sans-serif; background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); border: none; color: white; padding: 16px; font-size: 16px; border-radius: 14px; cursor: pointer; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.5); margin-top: 10px; }
         button:hover { transform: translateY(-3px); box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.7); }
         button:active { transform: translateY(0); }
-        button:disabled { background: rgba(255,255,255,0.1); color: #64748b; cursor: not-allowed; box-shadow: none; }
+        button:disabled { background: rgba(255,255,255,0.1); color: #64748b; cursor: not-allowed; box-shadow: none; border: 1px solid rgba(255,255,255,0.1);}
         
-        #successScreen { display: none; text-align: center; padding: 50px 20px; }
-        #successScreen h2 { border: none; font-size: 32px; color: #38bdf8;}
+        .btn-outline { background: transparent; border: 1px solid #38bdf8; color: #38bdf8; box-shadow: none; }
+        .btn-outline:hover { background: rgba(56, 189, 248, 0.1); }
 
         /* CSS CHO BẢNG LƯU Ý (TERMS MODAL) */
         .modal-overlay {
@@ -158,14 +144,16 @@
         .btn-disagree { background: transparent; border: 1px solid #94a3b8; color: #94a3b8; box-shadow: none;}
         .btn-disagree:hover { background: rgba(255,255,255,0.05); transform: translateY(0); box-shadow: none; color: #fff; border-color: #fff;}
         .btn-agree:disabled { background: rgba(255,255,255,0.1); color: #64748b; cursor: not-allowed; box-shadow: none; border: none;}
+        
+        #step2Card, #successScreen { display: none; text-align: left; }
+        #successScreen { text-align: center; padding: 50px 20px; }
+        #successScreen h2 { border: none; font-size: 32px; color: #38bdf8;}
     </style>
 </head>
 <body>
 
 <div class="blob blob1"></div>
 <div class="blob blob2"></div>
-
-<img src="https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png" class="bg-floating-img" alt="Background Logo">
 
 <div class="modal-overlay" id="termsModal">
     <div class="terms-box">
@@ -190,7 +178,7 @@
 
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-<div class="card" id="formScreen">
+<div class="card" id="step1Card">
     <h2>Thiết Kế Cà Vạt 3D</h2>
     
     <h3>1. Thông tin liên hệ</h3>
@@ -267,7 +255,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace1" style="color:#38bdf8">2</span> px</label>
-                    <input type="range" id="kcSpace1" min="-2" max="15" value="2" step="1">
+                    <input type="range" id="kcSpace1" min="2" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX1" style="color:#38bdf8">0</span></label>
@@ -307,7 +295,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace2" style="color:#38bdf8">2</span> px</label>
-                    <input type="range" id="kcSpace2" min="-2" max="15" value="2" step="1">
+                    <input type="range" id="kcSpace2" min="2" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX2" style="color:#38bdf8">0</span></label>
@@ -347,7 +335,7 @@
             <div class="slider-row">
                 <div class="slider-col">
                     <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">2</span> px</label>
-                    <input type="range" id="kcSpace3" min="-2" max="15" value="2" step="1">
+                    <input type="range" id="kcSpace3" min="2" max="15" value="2" step="1">
                 </div>
                 <div class="slider-col">
                     <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
@@ -356,27 +344,31 @@
             </div>
         </div>
 
-        <h3>5. Giao & Nhận Hàng</h3>
-        <div class="input-group">
-            <label>Chọn nơi nhận hàng:</label>
-            <div class="radio-group" style="flex-direction: column; gap: 5px;">
-                <label><input type="radio" name="delivery" value="Lớp 12A6 Trường THPT Châu Văn Liêm" checked> Lớp 12A6 THPT Châu Văn Liêm</label>
-                <label><input type="radio" name="delivery" value="Circle K đường Mạc Thiên Tích"> Circle K đường Mạc Thiên Tích</label>
-                <label><input type="radio" name="delivery" value="Nhà riêng" id="deliveryHomeRadio"> Địa chỉ nhà riêng (ghi rõ):</label>
-            </div>
-            <input type="text" id="deliveryHomeText" placeholder="Nhập địa chỉ nhà của bạn..." style="display:none; margin-top:10px;">
-        </div>
+        <button id="nextBtn" disabled>HỆ THỐNG ĐANG KHỞI TẠO 3D...</button>
+    </div>
+</div>
 
-        <div class="input-group">
-            <label>Số điện thoại người nhận:</label>
-            <div class="radio-group">
-                <label><input type="radio" name="deliveryPhone" value="Tương tự SĐT đặt hàng" checked> Tương tự SĐT đặt hàng</label>
-                <label><input type="radio" name="deliveryPhone" value="Số khác" id="deliveryPhoneOtherRadio"> Số khác:</label>
-            </div>
-            <input type="text" id="deliveryPhoneOtherText" placeholder="Nhập SĐT người nhận..." style="display:none; margin-top:10px;">
-        </div>
+<div class="card" id="step2Card">
+    <h2>📍 Thông tin giao hàng</h2>
+    
+    <h3>Địa điểm nhận hàng</h3>
+    <div class="input-group radio-group" style="flex-direction: column; gap: 10px;">
+        <label><input type="radio" name="deliveryLocation" value="Lớp 12A6 Trường THPT Châu Văn Liêm" checked> Lớp 12A6 Trường THPT Châu Văn Liêm</label>
+        <label><input type="radio" name="deliveryLocation" value="Circle K đường Mạc Thiên Tích"> Circle K đường Mạc Thiên Tích</label>
+        <label><input type="radio" name="deliveryLocation" value="Nhà riêng" id="locHomeRadio"> Địa chỉ nhà riêng (Ghi rõ bên dưới):</label>
+        <input type="text" id="locHomeText" placeholder="Nhập địa chỉ nhà cụ thể..." style="display:none; margin-top:5px; margin-left: 25px; width: calc(100% - 25px);">
+    </div>
 
-        <button id="submitBtn" disabled>HỆ THỐNG ĐANG KHỞI TẠO 3D...</button>
+    <h3>Số điện thoại người nhận</h3>
+    <div class="input-group radio-group" style="flex-direction: column; gap: 10px;">
+        <label><input type="radio" name="recipientPhone" value="Giống SĐT đặt hàng" checked> Tương tự SĐT đặt hàng</label>
+        <label><input type="radio" name="recipientPhone" value="Số khác" id="phoneOtherRadio"> Số khác (Ghi rõ bên dưới):</label>
+        <input type="text" id="phoneOtherText" placeholder="Nhập SĐT người nhận..." style="display:none; margin-top:5px; margin-left: 25px; width: calc(100% - 25px);">
+    </div>
+
+    <div class="slider-row" style="margin-top: 25px;">
+        <button class="slider-col btn-outline" id="backBtn">⬅ Quay Lại Sửa</button>
+        <button class="slider-col" id="submitBtn">GỬI ĐƠN HÀNG 🚀</button>
     </div>
 </div>
 
@@ -395,32 +387,39 @@
     let currentQuantity = 0;
     let isSubmitting = false;
     let isTermsAgreed = false;
+    const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
+    const backBtn = document.getElementById('backBtn');
     
+    // Giao tiếp form thành công
     document.getElementById('hidden_iframe').onload = function() {
         if(isSubmitting) {
-            document.getElementById('formScreen').style.display = 'none';
+            document.getElementById('step2Card').style.display = 'none';
             document.getElementById('successScreen').style.display = 'block';
         }
     };
 
+    // Toggle Input Text Trường học
     document.getElementsByName('school').forEach(r => r.addEventListener('change', () => {
         document.getElementById('schoolOtherText').style.display = document.getElementById('schoolOtherRadio').checked ? 'block' : 'none';
     }));
 
-    // LOGIC ẨN HIỆN CHO PHẦN GIAO HÀNG
-    document.getElementsByName('delivery').forEach(r => r.addEventListener('change', () => {
-        document.getElementById('deliveryHomeText').style.display = document.getElementById('deliveryHomeRadio').checked ? 'block' : 'none';
-    }));
-    document.getElementsByName('deliveryPhone').forEach(r => r.addEventListener('change', () => {
-        document.getElementById('deliveryPhoneOtherText').style.display = document.getElementById('deliveryPhoneOtherRadio').checked ? 'block' : 'none';
+    // Toggle Input Text Địa chỉ
+    document.getElementsByName('deliveryLocation').forEach(r => r.addEventListener('change', () => {
+        document.getElementById('locHomeText').style.display = document.getElementById('locHomeRadio').checked ? 'block' : 'none';
     }));
 
-    // BẢNG GIÁ MỚI VÀ 1 QR CODE CHUNG
+    // Toggle Input Text SĐT nhận hàng
+    document.getElementsByName('recipientPhone').forEach(r => r.addEventListener('change', () => {
+        document.getElementById('phoneOtherText').style.display = document.getElementById('phoneOtherRadio').checked ? 'block' : 'none';
+    }));
+
+    // Bảng Giá & QR (Dùng chung 1 ảnh QR mới)
+    const qrImageLink = "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg";
     const qrData = {
-        "1": { text: "Vui lòng thanh toán 58.000đ vào QR dưới đây", qr: "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" },
-        "2": { text: "Vui lòng thanh toán 110.000đ vào QR dưới đây", qr: "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" },
-        "3": { text: "Vui lòng thanh toán 155.000đ vào QR dưới đây", qr: "https://i.postimg.cc/qv8qsSn4/fbeefaaf-9810-44c9-ad8e-2401c4a96f88.jpg" }
+        "1": { text: "Vui lòng thanh toán 58.000đ vào QR dưới đây", qr: qrImageLink },
+        "2": { text: "Vui lòng thanh toán 110.000đ vào QR dưới đây", qr: qrImageLink },
+        "3": { text: "Vui lòng thanh toán 155.000đ vào QR dưới đây", qr: qrImageLink }
     };
 
     const termsModal = document.getElementById('termsModal');
@@ -436,7 +435,6 @@
 
     document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {
         currentQuantity = parseInt(e.target.value);
-        
         if(!isTermsAgreed) {
             termsModal.classList.add('active');
             if (termsContent.scrollHeight <= termsContent.clientHeight + 5) {
@@ -464,7 +462,6 @@
             dynSec.style.display = 'block';
             setTimeout(() => { dynSec.classList.add('visible'); }, 20); 
         }
-
         document.getElementById('paymentText').textContent = qrData[currentQuantity].text;
         document.getElementById('paymentQR').src = qrData[currentQuantity].qr;
         
@@ -482,8 +479,8 @@
     function checkReady() {
         loadedAssets++;
         if (loadedAssets >= totalAssets) {
-            submitBtn.textContent = "GỬI ĐƠN HÀNG & FILE 3D (.STL)";
-            submitBtn.disabled = false;
+            nextBtn.textContent = "TIẾP TỤC CHỌN ĐỊA ĐIỂM ➔";
+            nextBtn.disabled = false;
             viewers.forEach(v => v.updateText()); 
         }
     }
@@ -493,8 +490,7 @@
 
     opentype.load(linkMontserrat, function(err, font) { if(!err) fonts2D['montserrat'] = font; checkReady(); });
     opentype.load(linkTallFont, function(err, font) { 
-        if(!err) { fonts2D['tallfont'] = font; } 
-        else { fonts2D['tallfont'] = fonts2D['montserrat']; } 
+        if(!err) { fonts2D['tallfont'] = font; } else { fonts2D['tallfont'] = fonts2D['montserrat']; } 
         checkReady(); 
     });
 
@@ -613,11 +609,7 @@
                 for (const p of svgData.paths) {
                     const shapes = SVGLoader.createShapes(p);
                     for (const shape of shapes) {
-                        const geo = new THREE.ExtrudeGeometry(shape, {
-                            depth: extrudeDepth,
-                            bevelEnabled: false,
-                            curveSegments: 4
-                        });
+                        const geo = new THREE.ExtrudeGeometry(shape, { depth: extrudeDepth, bevelEnabled: false, curveSegments: 4 });
                         const mesh = new THREE.Mesh(geo, textMat);
                         textGroup.add(mesh);
                     }
@@ -645,12 +637,8 @@
         };
 
         inputFont.addEventListener('change', () => {
-            if (inputFont.value === 'montserrat') {
-                inputSpace.min = -2; inputSpace.max = 15; inputSpace.value = 2;
-            } else {
-                inputSpace.min = -4; inputSpace.max = 15; inputSpace.value = 2;
-            }
-            document.getElementById(`valSpace${index}`).textContent = inputSpace.value;
+            inputSpace.max = 15; inputSpace.value = 2;
+            document.getElementById(`valSpace${index}`).textContent = 2;
             updateText();
         });
 
@@ -684,27 +672,31 @@
     }
     animate();
 
-    submitBtn.addEventListener('click', () => {
+    // XỬ LÝ CHUYỂN MÀN HÌNH BƯỚC 1 -> BƯỚC 2
+    nextBtn.addEventListener('click', () => {
         const nameVal = document.getElementById('fullName').value.trim();
         if (!nameVal) { alert('Vui lòng điền Họ Tên!'); return; }
         if (!document.getElementById('paymentProof').files[0]) { alert("Vui lòng tải lên ảnh màn hình thanh toán!"); return; }
-
-        // Validate phần Giao Hàng Mới
-        const isHomeRadioChecked = document.getElementById('deliveryHomeRadio').checked;
-        const isPhoneOtherChecked = document.getElementById('deliveryPhoneOtherRadio').checked;
-        if(isHomeRadioChecked && !document.getElementById('deliveryHomeText').value.trim()) {
-            alert('Vui lòng nhập địa chỉ Nhà Riêng để giao hàng!'); return;
-        }
-        if(isPhoneOtherChecked && !document.getElementById('deliveryPhoneOtherText').value.trim()) {
-            alert('Vui lòng nhập Số điện thoại người nhận!'); return;
-        }
 
         for(let i=1; i<=currentQuantity; i++) {
             if(!document.getElementById(`kcName${i}`).value.trim()) { alert(`Vui lòng nhập Tên in cho Keychain #${i}`); return; }
         }
 
+        document.getElementById('step1Card').style.display = 'none';
+        document.getElementById('step2Card').style.display = 'block';
+    });
+
+    // QUAY LẠI TỪ BƯỚC 2 VỀ BƯỚC 1
+    backBtn.addEventListener('click', () => {
+        document.getElementById('step2Card').style.display = 'none';
+        document.getElementById('step1Card').style.display = 'block';
+    });
+
+    // BẤM GỬI ĐƠN HÀNG Ở BƯỚC 2
+    submitBtn.addEventListener('click', () => {
         submitBtn.textContent = "ĐANG TẠO FILE STL & GỬI ĐI..."; 
         submitBtn.disabled = true;
+        backBtn.disabled = true;
         isSubmitting = true;
 
         const form = document.createElement('form');
@@ -730,26 +722,29 @@
 
         addHidden("_captcha", "false");
         addHidden("_template", "box"); 
+        
+        const nameVal = document.getElementById('fullName').value.trim();
         addHidden("Họ_Tên", nameVal);
         
         let schoolVal = ""; document.getElementsByName('school').forEach(r => { if(r.checked) schoolVal = r.value==="Khác" ? document.getElementById('schoolOtherText').value : r.value; });
         addHidden("Trường", schoolVal);
         addHidden("Lớp", document.getElementById('className').value);
-        addHidden("SĐT_Đặt_hàng", document.getElementById('phone').value);
+        addHidden("SĐT_Zalo_Người_Đặt", document.getElementById('phone').value);
         addHidden("Facebook", document.getElementById('facebook').value);
         addHidden("Số_lượng_đặt", currentQuantity);
 
-        // Ghi nhận mục Giao Hàng Mới
+        // Lấy dữ liệu ở Bước 2
         let deliveryVal = "";
-        document.getElementsByName('delivery').forEach(r => { 
-            if(r.checked) deliveryVal = r.value === "Nhà riêng" ? document.getElementById('deliveryHomeText').value : r.value; 
+        document.getElementsByName('deliveryLocation').forEach(r => {
+            if(r.checked) deliveryVal = r.value === "Nhà riêng" ? `Nhà riêng: ${document.getElementById('locHomeText').value}` : r.value;
         });
-        let deliveryPhoneVal = "";
-        document.getElementsByName('deliveryPhone').forEach(r => {
-            if(r.checked) deliveryPhoneVal = r.value === "Số khác" ? document.getElementById('deliveryPhoneOtherText').value : document.getElementById('phone').value;
+        addHidden("Địa_Điểm_Nhận", deliveryVal);
+
+        let recPhoneVal = "";
+        document.getElementsByName('recipientPhone').forEach(r => {
+            if(r.checked) recPhoneVal = r.value === "Số khác" ? document.getElementById('phoneOtherText').value : document.getElementById('phone').value;
         });
-        addHidden("Địa_điểm_nhận", deliveryVal);
-        addHidden("SĐT_Người_nhận", deliveryPhoneVal);
+        addHidden("SĐT_Người_Nhận", recPhoneVal);
 
         addFile("Ảnh_Bill_Thanh_Toán", document.getElementById('paymentProof').files[0]);
 
@@ -771,7 +766,6 @@
             const stlFile = new File([stlBlob], safeFileName, { type: 'application/octet-stream' });
 
             addFile(`File_STL_3D_SanSangIn_${i}`, stlFile);
-            
             addHidden(`Thông_tin_Móc_${i}`, `Tên: ${keyText} | Phông: ${fontName} | Loại: ${modelType === 'HFM.stl' ? 'Nam (HFM)' : 'Nữ (HFF)'}`);
             addHidden(`Kích_Thước_Móc_${i}`, `Scale: ${scaleSize}x | Khoảng cách chữ: ${spacing}px | Tọa độ X: ${document.getElementById(`kcX${i}`).value}`);
         }
