@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đặt Hàng Keychain Cà Vạt 3D Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
     
     <script type="importmap">
@@ -17,90 +17,78 @@
     </script>
 
     <style>
-        /* TỔNG THỂ & FIX BUG MÀN HÌNH */
-        html, body { overflow-x: hidden; max-width: 100vw; margin: 0; padding: 0; background-color: #020617; }
-
-        body { 
-            font-family: 'Montserrat', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; color: #e2e8f0;
+        /* FIX LỖI LỆCH TRANG TRÊN MOBILE & IPAD */
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+            margin: 0; padding: 0;
+            background-color: #020617; /* Màu nền dự phòng */
+            font-family: 'Montserrat', sans-serif;
+            color: #e2e8f0;
         }
 
-        /* LỚP NỀN ĐỘC LẬP TÁCH BIỆT (Fix lỗi giật trang) */
-        #bg-layer {
-            position: fixed; top: -5%; left: -5%; width: 110%; height: 110%;
+        /* FIX LỖI GIẬT MÀN HÌNH BẰNG LỚP NỀN ĐỘC LẬP TÁCH BIỆT */
+        .bg-layer {
+            position: fixed;
+            top: -10%; left: -10%; 
+            width: 120%; height: 120%; /* Rộng hơn màn hình để khi scale không bị lộ góc */
             background: linear-gradient(135deg, rgba(0,4,40,0.85) 0%, rgba(0,78,146,0.85) 100%), url('https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png');
-            background-size: cover; background-position: center;
-            z-index: -100; pointer-events: none; will-change: transform;
-            animation: smoothBgZoom 20s infinite alternate ease-in-out;
+            background-size: cover; 
+            background-position: center; 
+            z-index: -2;
+            pointer-events: none;
+            animation: backgroundZoom 25s infinite alternate ease-in-out;
         }
-        @keyframes smoothBgZoom { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
+        @keyframes backgroundZoom { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
         
-        .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.5; animation: float 12s infinite ease-in-out alternate; pointer-events: none;}
+        /* HIỆU ỨNG BLOBS SANG TRỌNG */
+        .blob { position: fixed; filter: blur(80px); z-index: -1; opacity: 0.5; animation: float 12s infinite ease-in-out alternate; pointer-events: none;}
         .blob1 { width: 350px; height: 350px; background: #0052D4; border-radius: 50%; top: -50px; left: -50px; }
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        /* HIỆU ỨNG INTRO ARTISTIC BẬC CAO */
-        #introScreen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #020617; 
-            z-index: 999999; display: flex; justify-content: center; align-items: center;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
-        }
-        .art-rings { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; pointer-events: none; }
-        .ring { position: absolute; border-radius: 50%; border: 1px solid transparent; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .ring1 { width: 220px; height: 220px; animation: spinRing 15s linear infinite; border-top-color: rgba(56, 189, 248, 0.4); }
-        .ring2 { width: 260px; height: 260px; animation: spinRingReverse 20s linear infinite; border-right-color: rgba(56, 189, 248, 0.2); }
-        .ring3 { width: 300px; height: 300px; animation: spinRing 25s linear infinite; border-bottom-color: rgba(255, 255, 255, 0.1); }
-        
-        .artistic-wrap { position: relative; display: flex; flex-direction: column; align-items: center; z-index: 2; }
-        .art-title {
-            font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: clamp(35px, 8vw, 60px);
-            color: transparent; 
-            background: linear-gradient(60deg, #94a3b8, #ffffff, #38bdf8, #ffffff, #94a3b8);
-            background-size: 300% auto; -webkit-background-clip: text; background-clip: text;
-            animation: textShine 4s linear infinite, textReveal 2.5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
-            margin-left: 15px; /* Offset spacing */
-        }
-        .art-line {
-            width: 0; height: 1px; background: linear-gradient(90deg, transparent, #38bdf8, transparent);
-            margin: 15px 0; box-shadow: 0 0 10px #38bdf8;
-            animation: drawArtLine 1.5s cubic-bezier(0.7, 0, 0.3, 1) forwards 1.2s;
-        }
-        .art-subtitle {
-            font-size: clamp(10px, 2.5vw, 14px); font-weight: 300; letter-spacing: 8px; margin-left: 8px;
-            color: #94a3b8; opacity: 0; transform: translateY(15px);
-            animation: fadeUpArt 1.5s ease-out forwards 1.8s;
-        }
-        .intro-hide { opacity: 0 !important; visibility: hidden; }
-
-        @keyframes spinRing { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-        @keyframes spinRingReverse { 0% { transform: translate(-50%, -50%) rotate(360deg); } 100% { transform: translate(-50%, -50%) rotate(0deg); } }
-        @keyframes textReveal {
-            0% { filter: blur(15px); transform: scale(1.1); opacity: 0; letter-spacing: 35px; }
-            100% { filter: blur(0); transform: scale(1); opacity: 1; letter-spacing: 15px; }
-        }
-        @keyframes drawArtLine { 0% { width: 0; opacity: 0; } 50% { opacity: 1; } 100% { width: 100%; opacity: 0.7; } }
-        @keyframes fadeUpArt { 0% { opacity: 0; transform: translateY(15px); filter: blur(4px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
-        @keyframes textShine { to { background-position: 200% center; } }
-
-        /* KHUNG CHÍNH (Chờ Intro) */
+        /* GÓI GIAO DIỆN CHÍNH */
         #mainContent {
-            opacity: 0; transform: scale(0.95); filter: blur(10px);
-            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-            width: 100%; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
+            opacity: 0;
+            transform: scale(0.9);
+            filter: blur(15px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%; 
+            min-height: 100vh;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
         #mainContent.show { opacity: 1; transform: scale(1); filter: blur(0); }
 
         /* KHỐI CARD KÍNH MỜ */
         .card { 
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 35px; border-radius: 24px; width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto; text-align: left; position: relative; box-sizing: border-box;
+            background: rgba(15, 23, 42, 0.7); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            padding: 35px; 
+            border-radius: 24px; 
+            width: 100%; 
+            max-width: 480px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            text-align: left; 
+            position: relative;
+            box-sizing: border-box;
         }
         .card::-webkit-scrollbar { width: 6px; }
         .card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         .card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
         
+        /* TYPOGRAPHY */
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
         
+        /* FORM & INPUTS */
         .input-group { margin-bottom: 18px; }
         label { display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 8px; font-weight: 500; }
         
@@ -114,6 +102,7 @@
         input[type="text"]:focus, select:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
         select option { background: #0f172a; color: #fff; }
 
+        /* SLIDERS & MOBILE BUG FIXES */
         input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; margin: 10px 0; touch-action: pan-y; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #ffffff; cursor: pointer; margin-top: -8px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); transition: 0.2s;}
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #38bdf8;}
@@ -136,7 +125,7 @@
         .canvas-container { 
             width: 100%; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.3) 100%); 
             border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; position: relative; margin-bottom: 12px; cursor: grab; box-shadow: inset 0 4px 20px rgba(0,0,0,0.5);
-            touch-action: none; 
+            touch-action: none; /* Khóa cuộn trang khi đang thao tác xoay khối 3D */
         }
         .canvas-container:active { cursor: grabbing; }
         .instruction { font-size: 12px; color: #94a3b8; text-align: center; margin-bottom: 20px; font-weight: 400; }
@@ -152,12 +141,12 @@
         .btn-outline { background: transparent; border: 1px solid #38bdf8; color: #38bdf8; box-shadow: none; }
         .btn-outline:hover { background: rgba(56, 189, 248, 0.1); }
 
-        /* BẢNG LƯU Ý (TERMS MODAL) */
+        /* BẢNG LƯU Ý QUAN TRỌNG */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             display: none; justify-content: center; align-items: center; z-index: 9999;
-            opacity: 0; transition: opacity 0.3s ease; overflow: hidden;
+            opacity: 0; transition: opacity 0.3s ease; overflow: hidden; /* Cấm trào nền đen */
         }
         .modal-overlay.active { display: flex; opacity: 1; }
         .terms-box {
@@ -183,28 +172,107 @@
         #step2Card, #successScreen { display: none; text-align: left; }
         #successScreen { text-align: center; padding: 50px 20px; }
         #successScreen h2 { border: none; font-size: 32px; color: #38bdf8;}
+
+        /* HIỆU ỨNG ARTISTIC INTRO MỚI X10 PHỨC TẠP */
+        #introScreen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; 
+            z-index: 999999; display: flex; justify-content: center; align-items: center; overflow: hidden;
+            transition: opacity 1s ease;
+        }
+        /* Các vệt màu nền trượt */
+        .art-bg { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; transform-origin: left; z-index: 1;}
+        .art-bg-1 { background: #f43f5e; animation: slideWipe 1.2s cubic-bezier(0.7,0,0.3,1) forwards; }
+        .art-bg-2 { background: #3b82f6; animation: slideWipe 1.2s cubic-bezier(0.7,0,0.3,1) forwards 0.15s; }
+        .art-bg-3 { background: #10b981; animation: slideWipe 1.2s cubic-bezier(0.7,0,0.3,1) forwards 0.3s; }
+        @keyframes slideWipe { 0% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+
+        .intro-logo-box { position: relative; z-index: 5; text-align: center; }
+        
+        /* Từng chữ cái nảy lên đầy nghệ thuật */
+        .artistic-title { display: flex; justify-content: center; align-items: flex-end; margin-bottom: 10px;}
+        .letter {
+            font-size: clamp(40px, 8vw, 80px); font-weight: 900;
+            opacity: 0; transform: translateY(50px) rotate(-15deg) scale(0.5);
+            animation: bounceLetter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation-delay: calc(1s + var(--i) * 0.1s);
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.3);
+            margin: 0 2px;
+        }
+        .letter-space { width: 15px; }
+        .letter-highlight {
+            background: linear-gradient(45deg, #06b6d4, #3b82f6); -webkit-background-clip: text; color: transparent;
+            text-shadow: none; font-style: italic; filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.3));
+        }
+        @keyframes bounceLetter {
+            to { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+        }
+
+        /* Nét cọ vẽ phía sau Subtitle */
+        .artistic-subtitle-wrapper { position: relative; display: inline-block; }
+        .brush-stroke {
+            position: absolute; top: 0; left: -5%; width: 110%; height: 100%;
+            background: #fbbf24; transform: scaleX(0); transform-origin: left; border-radius: 4px;
+            animation: drawBrush 0.6s cubic-bezier(0.8, 0, 0.2, 1) forwards 1.8s; z-index: -1;
+        }
+        @keyframes drawBrush { to { transform: scaleX(1); } }
+        
+        .artistic-subtitle {
+            font-size: clamp(14px, 3vw, 20px); color: #0f172a; font-weight: 800; letter-spacing: 4px;
+            padding: 5px 15px; opacity: 0; animation: popText 0.4s forwards 2.1s;
+        }
+        @keyframes popText { to { opacity: 1; transform: scale(1); } }
+
+        /* Khối hình học Pop-up xung quanh */
+        .pop-element { position: absolute; opacity: 0; z-index: 4;}
+        .pop-1 { width: 30px; height: 30px; border-radius: 50%; background: #f43f5e; top: -50px; left: -80px; animation: popShape 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 1.5s; }
+        .pop-2 { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid #10b981; bottom: -60px; right: -50px; transform: rotate(45deg); animation: popShape 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 1.7s; }
+        .pop-3 { width: 25px; height: 25px; background: #3b82f6; top: 20px; right: -80px; border-radius: 4px; transform: rotate(15deg); animation: popShape 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 1.9s; }
+        .pop-4 { width: 15px; height: 15px; border-radius: 50%; background: #fbbf24; bottom: -20px; left: -40px; animation: popShape 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 2.1s; }
+        @keyframes popShape { 0% { transform: scale(0) rotate(0deg) translate(0, 0); opacity: 0; } 100% { transform: scale(1) rotate(180deg) translate(10px, -10px); opacity: 1; } }
+
+        /* Thổi bay tất cả để vào trang chính */
+        .intro-screen-hide { animation: blowAway 1.2s cubic-bezier(0.7, 0, 0.3, 1) forwards; }
+        @keyframes blowAway {
+            0% { transform: scale(1); opacity: 1; }
+            30% { transform: scale(0.9); opacity: 1; }
+            100% { transform: scale(2.5) translateY(-50px); opacity: 0; filter: blur(20px); }
+        }
     </style>
 </head>
 <body>
 
-<div id="bg-layer"></div>
+<div class="bg-layer"></div>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
 
 <div id="introScreen">
-    <div class="art-rings">
-        <div class="ring ring1"></div>
-        <div class="ring ring2"></div>
-        <div class="ring ring3"></div>
-    </div>
-    <div class="artistic-wrap">
-        <div class="art-title">CVLER</div>
-        <div class="art-line"></div>
-        <div class="art-subtitle">PREMIUM CUSTOMIZER</div>
+    <div class="art-bg art-bg-1"></div>
+    <div class="art-bg art-bg-2"></div>
+    <div class="art-bg art-bg-3"></div>
+
+    <div class="intro-logo-box">
+        <div class="pop-element pop-1"></div>
+        <div class="pop-element pop-2"></div>
+        <div class="pop-element pop-3"></div>
+        <div class="pop-element pop-4"></div>
+
+        <div class="artistic-title">
+            <span class="letter" style="--i:1; color: #f43f5e;">C</span>
+            <span class="letter" style="--i:2; color: #3b82f6;">V</span>
+            <span class="letter" style="--i:3; color: #10b981;">L</span>
+            <span class="letter" style="--i:4; color: #f59e0b;">E</span>
+            <span class="letter" style="--i:5; color: #8b5cf6;">R</span>
+            <span class="letter-space"></span>
+            <span class="letter letter-highlight" style="--i:6;">3D</span>
+        </div>
+        <div class="artistic-subtitle-wrapper">
+            <div class="brush-stroke"></div>
+            <div class="artistic-subtitle">CREATIVE CUSTOMIZER</div>
+        </div>
     </div>
 </div>
 
 <div id="mainContent">
-    <div class="blob blob1"></div>
-    <div class="blob blob2"></div>
 
     <div class="modal-overlay" id="termsModal">
         <div class="terms-box">
@@ -386,7 +454,7 @@
                 <div class="slider-row">
                     <div class="slider-col">
                         <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">2</span> px</label>
-                        <input type="range" id="kcSpace3" min="-2" max="15" value="2" step="1">
+                        <input type="range" id="kcSpace3" min="-4" max="15" value="2" step="1">
                     </div>
                     <div class="slider-col">
                         <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
@@ -436,14 +504,15 @@
     import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
     import { STLExporter } from 'three/addons/exporters/STLExporter.js'; 
 
-    // TRIGGER ANIMATION GIỚI THIỆU ARTISTIC
+    // TRIGGER ANIMATION GIỚI THIỆU (CHỜ 4 GIÂY ĐỂ HIỆU ỨNG PHÔ DIỄN ĐỦ)
     window.addEventListener('load', () => {
         setTimeout(() => {
             const intro = document.getElementById('introScreen');
             intro.classList.add('intro-screen-hide');
             document.getElementById('mainContent').classList.add('show');
-            setTimeout(() => { intro.style.display = 'none'; }, 1500); 
-        }, 4000); // Intro chạy 4 giây rồi chuyển cảnh
+            // Dọn dẹp DOM sau khi hiệu ứng kết thúc để giảm gánh nặng cho web
+            setTimeout(() => { intro.style.display = 'none'; }, 1500);
+        }, 4000); 
     });
 
     let currentQuantity = 0;
@@ -453,6 +522,7 @@
     const submitBtn = document.getElementById('submitBtn');
     const backBtn = document.getElementById('backBtn');
     
+    // Giao tiếp form thành công
     document.getElementById('hidden_iframe').onload = function() {
         if(isSubmitting) {
             document.getElementById('step2Card').style.display = 'none';
@@ -460,6 +530,7 @@
         }
     };
 
+    // Toggle Input Text
     document.getElementsByName('school').forEach(r => r.addEventListener('change', () => {
         document.getElementById('schoolOtherText').style.display = document.getElementById('schoolOtherRadio').checked ? 'block' : 'none';
     }));
@@ -470,6 +541,7 @@
         document.getElementById('phoneOtherText').style.display = document.getElementById('phoneOtherRadio').checked ? 'block' : 'none';
     }));
 
+    // ĐÃ CẬP NHẬT DATA QR VÀ GIÁ ĐÚNG VỚI YÊU CẦU
     const qrData = {
         "1": { text: "Vui lòng thanh toán 58.000đ vào QR dưới đây", qr: "https://i.postimg.cc/SNr1Tb4n/Screenshot-2026-03-25-173036.png" },
         "2": { text: "Vui lòng thanh toán 110.000đ vào QR dưới đây", qr: "https://i.postimg.cc/N0yNjyHp/Screenshot-2026-03-25-173144.png" },
@@ -491,7 +563,7 @@
         currentQuantity = parseInt(e.target.value);
         if(!isTermsAgreed) {
             termsModal.classList.add('active');
-            document.body.style.overflow = 'hidden'; 
+            document.body.style.overflow = 'hidden'; // Khóa cuộn màn hình khi hiện lưu ý
             if (termsContent.scrollHeight <= termsContent.clientHeight + 5) {
                 btnAgree.disabled = false;
             }
@@ -502,14 +574,14 @@
 
     btnDisagree.addEventListener('click', () => {
         termsModal.classList.remove('active');
-        document.body.style.overflow = ''; 
+        document.body.style.overflow = ''; // Mở khóa cuộn màn hình
         document.getElementsByName('quantity').forEach(r => r.checked = false); 
     });
 
     btnAgree.addEventListener('click', () => {
         isTermsAgreed = true;
         termsModal.classList.remove('active');
-        document.body.style.overflow = ''; 
+        document.body.style.overflow = ''; // Mở khóa cuộn màn hình
         showDynamicSections();
     });
 
@@ -577,7 +649,7 @@
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        // KHÓA LĂN CHUỘT / PAN ĐỂ FIX LỖI MẤT MÔ HÌNH 3D
+        // FIX LỖI LĂN CHUỘT LÀM MẤT MÔ HÌNH
         controls.enableZoom = false;
         controls.enablePan = false;
 
@@ -689,7 +761,7 @@
             }
 
             const posX = parseFloat(inputX.value);
-            // 👇 CHỈNH SỬA TỌA ĐỘ Y Ở ĐÂY 👇
+            // 👇 TỌA ĐỘ Y CỦA FONT 👇
             const posY = (fontKey === 'tallfont') ? 0.4 : 0; 
             const posZ = 0.3; 
             
@@ -737,6 +809,7 @@
     }
     animate();
 
+    // XỬ LÝ CHUYỂN MÀN HÌNH BƯỚC 1 -> BƯỚC 2
     nextBtn.addEventListener('click', () => {
         const nameVal = document.getElementById('fullName').value.trim();
         if (!nameVal) { alert('Vui lòng điền Họ Tên!'); return; }
@@ -750,11 +823,13 @@
         document.getElementById('step2Card').style.display = 'block';
     });
 
+    // QUAY LẠI TỪ BƯỚC 2 VỀ BƯỚC 1
     backBtn.addEventListener('click', () => {
         document.getElementById('step2Card').style.display = 'none';
         document.getElementById('step1Card').style.display = 'block';
     });
 
+    // BẤM GỬI ĐƠN HÀNG Ở BƯỚC 2
     submitBtn.addEventListener('click', () => {
         submitBtn.textContent = "ĐANG TẠO FILE STL & GỬI ĐI..."; 
         submitBtn.disabled = true;
