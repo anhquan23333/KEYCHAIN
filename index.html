@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đặt Hàng Keychain Cà Vạt 3D Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
     
     <script type="importmap">
@@ -17,121 +17,86 @@
     </script>
 
     <style>
-        /* TỐI ƯU HÓA MOBILE & FIX LỖI LỆCH TRANG */
-        html, body { 
-            overflow-x: hidden; width: 100vw; margin: 0; padding: 0; 
-            background-color: #020617; font-family: 'Montserrat', sans-serif; color: #e2e8f0;
+        /* TỔNG THỂ & FIX BUG MÀN HÌNH */
+        html, body { overflow-x: hidden; max-width: 100vw; margin: 0; padding: 0; background-color: #020617; }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; color: #e2e8f0;
         }
 
-        /* LỚP NỀN TÁCH BIỆT (CHỐNG LỖI GIẬT LAYOUT KHI DI CHUYỂN) */
-        #ambient-background {
-            position: fixed; top: -5%; left: -5%; width: 110vw; height: 110vh;
+        /* LỚP NỀN ĐỘC LẬP TÁCH BIỆT (Fix lỗi giật trang) */
+        #bg-layer {
+            position: fixed; top: -5%; left: -5%; width: 110%; height: 110%;
             background: linear-gradient(135deg, rgba(0,4,40,0.85) 0%, rgba(0,78,146,0.85) 100%), url('https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png');
             background-size: cover; background-position: center;
-            z-index: -10;
-            animation: bgSmoothPanZoom 25s ease-in-out infinite alternate;
-            will-change: transform;
+            z-index: -100; pointer-events: none; will-change: transform;
+            animation: smoothBgZoom 20s infinite alternate ease-in-out;
         }
-        @keyframes bgSmoothPanZoom {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.05) translate(-1%, -1%); }
-        }
-
-        /* 10X COMPLEX INTRO ANIMATION */
+        @keyframes smoothBgZoom { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
+        
+        .blob { position: absolute; filter: blur(80px); z-index: -1; opacity: 0.5; animation: float 12s infinite ease-in-out alternate; pointer-events: none;}
+        .blob1 { width: 350px; height: 350px; background: #0052D4; border-radius: 50%; top: -50px; left: -50px; }
+        .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
+        
+        /* HIỆU ỨNG INTRO ARTISTIC BẬC CAO */
         #introScreen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #020617; 
             z-index: 999999; display: flex; justify-content: center; align-items: center;
-            overflow: hidden; pointer-events: auto;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
         }
-        /* Hai cánh cổng đen */
-        .intro-gate { position: absolute; width: 50vw; height: 100vh; background: #020617; top: 0; z-index: 1; transition: transform 1.2s cubic-bezier(0.77, 0, 0.17, 1); }
-        .intro-gate.left { left: 0; border-right: 1px solid rgba(56, 189, 248, 0.2); }
-        .intro-gate.right { right: 0; border-left: 1px solid rgba(56, 189, 248, 0.2); }
+        .art-rings { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; pointer-events: none; }
+        .ring { position: absolute; border-radius: 50%; border: 1px solid transparent; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .ring1 { width: 220px; height: 220px; animation: spinRing 15s linear infinite; border-top-color: rgba(56, 189, 248, 0.4); }
+        .ring2 { width: 260px; height: 260px; animation: spinRingReverse 20s linear infinite; border-right-color: rgba(56, 189, 248, 0.2); }
+        .ring3 { width: 300px; height: 300px; animation: spinRing 25s linear infinite; border-bottom-color: rgba(255, 255, 255, 0.1); }
         
-        .intro-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
-        
-        .cyber-ring-outer {
-            position: absolute; width: 300px; height: 300px; border: 2px solid transparent;
-            border-top-color: #38bdf8; border-bottom-color: #0ea5e9; border-radius: 50%;
-            animation: spinRing 3s linear infinite, ringPulse 1.5s ease-in-out infinite alternate;
-            opacity: 0;
+        .artistic-wrap { position: relative; display: flex; flex-direction: column; align-items: center; z-index: 2; }
+        .art-title {
+            font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: clamp(35px, 8vw, 60px);
+            color: transparent; 
+            background: linear-gradient(60deg, #94a3b8, #ffffff, #38bdf8, #ffffff, #94a3b8);
+            background-size: 300% auto; -webkit-background-clip: text; background-clip: text;
+            animation: textShine 4s linear infinite, textReveal 2.5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+            margin-left: 15px; /* Offset spacing */
         }
-        .cyber-ring-inner {
-            position: absolute; width: 250px; height: 250px; border: 2px dashed rgba(56, 189, 248, 0.6);
-            border-radius: 50%; animation: spinRingReverse 4s linear infinite; opacity: 0;
+        .art-line {
+            width: 0; height: 1px; background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+            margin: 15px 0; box-shadow: 0 0 10px #38bdf8;
+            animation: drawArtLine 1.5s cubic-bezier(0.7, 0, 0.3, 1) forwards 1.2s;
         }
-        
-        @keyframes spinRing { 0% { transform: rotate(0deg) scale(0.5); opacity: 0; } 20% { opacity: 1; transform: rotate(72deg) scale(1); } 80% { opacity: 1; transform: rotate(288deg) scale(1); } 100% { transform: rotate(360deg) scale(1.5); opacity: 0; } }
-        @keyframes spinRingReverse { 0% { transform: rotate(360deg) scale(0.5); opacity: 0; } 20% { opacity: 1; transform: rotate(288deg) scale(1); } 80% { opacity: 1; transform: rotate(72deg) scale(1); } 100% { transform: rotate(0deg) scale(1.5); opacity: 0; } }
-        
-        .intro-logo { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 3; }
-        
-        .intro-title {
-            font-size: clamp(40px, 8vw, 70px); color: transparent; font-weight: 800; letter-spacing: 15px;
-            background-image: linear-gradient(to right, #0ea5e9, #38bdf8, #fff);
-            -webkit-background-clip: text; background-clip: text;
-            transform: scale(0.8) translateY(20px); opacity: 0;
-            animation: titleReveal 1s cubic-bezier(0.2, 1, 0.3, 1) forwards 1s, glitch 3s infinite 2s;
-            margin-left: 15px; 
+        .art-subtitle {
+            font-size: clamp(10px, 2.5vw, 14px); font-weight: 300; letter-spacing: 8px; margin-left: 8px;
+            color: #94a3b8; opacity: 0; transform: translateY(15px);
+            animation: fadeUpArt 1.5s ease-out forwards 1.8s;
         }
-        
-        .intro-beam {
-            width: 0%; height: 3px; background: #fff; box-shadow: 0 0 20px #38bdf8, 0 0 40px #0ea5e9;
-            margin: 15px 0; animation: beamShoot 0.8s cubic-bezier(0.8, 0, 0.2, 1) forwards 1.4s;
-        }
+        .intro-hide { opacity: 0 !important; visibility: hidden; }
 
-        .intro-subtitle {
-            font-size: clamp(12px, 3vw, 20px); color: #94a3b8; letter-spacing: 10px; font-weight: 600;
-            display: flex; gap: 5px; overflow: hidden; margin-left: 10px;
+        @keyframes spinRing { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes spinRingReverse { 0% { transform: translate(-50%, -50%) rotate(360deg); } 100% { transform: translate(-50%, -50%) rotate(0deg); } }
+        @keyframes textReveal {
+            0% { filter: blur(15px); transform: scale(1.1); opacity: 0; letter-spacing: 35px; }
+            100% { filter: blur(0); transform: scale(1); opacity: 1; letter-spacing: 15px; }
         }
-        .intro-subtitle span {
-            display: inline-block; transform: translateY(100%); opacity: 0;
-            animation: charPop 0.5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
-        }
-        
-        .loading-bar-container {
-            width: 250px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 30px; position: relative; overflow: hidden;
-            opacity: 0; animation: fadeIn 0.5s forwards 1.5s; z-index: 3;
-        }
-        .loading-progress {
-            position: absolute; left: 0; top: 0; height: 100%; background: #38bdf8; width: 0%;
-            box-shadow: 0 0 10px #38bdf8; animation: loadFill 2s cubic-bezier(0.7, 0, 0.3, 1) forwards 1.8s;
-        }
+        @keyframes drawArtLine { 0% { width: 0; opacity: 0; } 50% { opacity: 1; } 100% { width: 100%; opacity: 0.7; } }
+        @keyframes fadeUpArt { 0% { opacity: 0; transform: translateY(15px); filter: blur(4px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
+        @keyframes textShine { to { background-position: 200% center; } }
 
-        @keyframes titleReveal { to { transform: scale(1) translateY(0); opacity: 1; } }
-        @keyframes beamShoot { 0% { width: 0%; opacity: 0; } 50% { opacity: 1; width: 120%; } 100% { width: 80%; opacity: 1; } }
-        @keyframes charPop { to { transform: translateY(0); opacity: 1; } }
-        @keyframes loadFill { 0% { width: 0%; } 80% { width: 90%; } 100% { width: 100%; } }
-        @keyframes fadeIn { to { opacity: 1; } }
-        @keyframes glitch { 
-            0% { text-shadow: 0 0 10px rgba(56,189,248,0.5); }
-            92% { text-shadow: 0 0 10px rgba(56,189,248,0.5); transform: translate(0, 0); }
-            94% { text-shadow: -3px 0 red, 3px 0 cyan; transform: translate(-2px, 1px); }
-            96% { text-shadow: 3px 0 red, -3px 0 cyan; transform: translate(2px, -1px); }
-            98% { text-shadow: 0 0 10px rgba(56,189,248,0.5); transform: translate(0, 0); }
-            100% { text-shadow: 0 0 10px rgba(56,189,248,0.5); }
-        }
-
-        /* Logic nứt màn hình */
-        .intro-out .intro-gate.left { transform: translateX(-100%); }
-        .intro-out .intro-gate.right { transform: translateX(100%); }
-        .intro-out .intro-content { transform: scale(1.5); opacity: 0; transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1); filter: blur(20px); }
-
-        /* GIAO DIỆN CHÍNH NẰM Ở GIỮA */
+        /* KHUNG CHÍNH (Chờ Intro) */
         #mainContent {
-            opacity: 0; transform: scale(0.9); filter: blur(15px);
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
-            width: 100vw; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
-            position: absolute; top: 0; left: 0;
+            opacity: 0; transform: scale(0.95); filter: blur(10px);
+            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
         }
-        #mainContent.show { opacity: 1; transform: scale(1); filter: blur(0); position: relative;}
+        #mainContent.show { opacity: 1; transform: scale(1); filter: blur(0); }
 
         /* KHỐI CARD KÍNH MỜ */
         .card { 
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 35px; border-radius: 24px; width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto; text-align: left; position: relative; box-sizing: border-box; margin: auto;
+            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 35px; border-radius: 24px; width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto; text-align: left; position: relative; box-sizing: border-box;
         }
         .card::-webkit-scrollbar { width: 6px; }
         .card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
         
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
@@ -145,11 +110,13 @@
         input[type="radio"] { accent-color: #38bdf8; transform: scale(1.2); margin-right: 8px; cursor: pointer;}
         
         input[type="text"], input[type="file"], select { width: 100%; padding: 14px 16px; font-size: 14px; font-family: 'Montserrat', sans-serif; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; outline: none; transition: all 0.3s ease; box-sizing: border-box; color: #ffffff; font-weight: 500; }
+        input[type="text"]::placeholder { color: rgba(255,255,255,0.4); font-weight: 400;}
         input[type="text"]:focus, select:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
         select option { background: #0f172a; color: #fff; }
 
-        input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; margin: 10px 0; touch-action: pan-y; /* KHÓA VUỐT NGANG */ }
+        input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; margin: 10px 0; touch-action: pan-y; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #ffffff; cursor: pointer; margin-top: -8px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); transition: 0.2s;}
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); background: #38bdf8;}
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: rgba(255,255,255,0.2); border-radius: 5px; }
         
         #dynamicSections { display: none; opacity: 0; transform: translateY(-20px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -169,7 +136,7 @@
         .canvas-container { 
             width: 100%; height: 260px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.3) 100%); 
             border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; position: relative; margin-bottom: 12px; cursor: grab; box-shadow: inset 0 4px 20px rgba(0,0,0,0.5);
-            touch-action: none; /* KHÓA TRƯỢT LÊN XUỐNG KHI XOAY MÔ HÌNH */
+            touch-action: none; 
         }
         .canvas-container:active { cursor: grabbing; }
         .instruction { font-size: 12px; color: #94a3b8; text-align: center; margin-bottom: 20px; font-weight: 400; }
@@ -185,12 +152,12 @@
         .btn-outline { background: transparent; border: 1px solid #38bdf8; color: #38bdf8; box-shadow: none; }
         .btn-outline:hover { background: rgba(56, 189, 248, 0.1); }
 
-        /* BẢNG LƯU Ý - FIX LỖI CUỘN LỘ NỀN */
+        /* BẢNG LƯU Ý (TERMS MODAL) */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             display: none; justify-content: center; align-items: center; z-index: 9999;
-            opacity: 0; transition: opacity 0.3s ease;
+            opacity: 0; transition: opacity 0.3s ease; overflow: hidden;
         }
         .modal-overlay.active { display: flex; opacity: 1; }
         .terms-box {
@@ -220,25 +187,18 @@
 </head>
 <body>
 
-<div id="ambient-background"></div>
+<div id="bg-layer"></div>
 
 <div id="introScreen">
-    <div class="intro-gate left"></div>
-    <div class="intro-gate right"></div>
-    <div class="intro-content">
-        <div class="cyber-ring-outer"></div>
-        <div class="cyber-ring-inner"></div>
-        <div class="intro-logo">
-            <div class="intro-title">CVLER 3D</div>
-            <div class="intro-beam"></div>
-            <div class="intro-subtitle">
-                <span style="animation-delay: 1.60s">P</span><span style="animation-delay: 1.64s">R</span><span style="animation-delay: 1.68s">E</span><span style="animation-delay: 1.72s">M</span><span style="animation-delay: 1.76s">I</span><span style="animation-delay: 1.80s">U</span><span style="animation-delay: 1.84s">M</span>
-                <span style="animation-delay: 1.88s; margin-left: 10px;">C</span><span style="animation-delay: 1.92s">U</span><span style="animation-delay: 1.96s">S</span><span style="animation-delay: 2.00s">T</span><span style="animation-delay: 2.04s">O</span><span style="animation-delay: 2.08s">M</span><span style="animation-delay: 2.12s">I</span><span style="animation-delay: 2.16s">Z</span><span style="animation-delay: 2.20s">E</span><span style="animation-delay: 2.24s">R</span>
-            </div>
-        </div>
-        <div class="loading-bar-container">
-            <div class="loading-progress"></div>
-        </div>
+    <div class="art-rings">
+        <div class="ring ring1"></div>
+        <div class="ring ring2"></div>
+        <div class="ring ring3"></div>
+    </div>
+    <div class="artistic-wrap">
+        <div class="art-title">CVLER</div>
+        <div class="art-line"></div>
+        <div class="art-subtitle">PREMIUM CUSTOMIZER</div>
     </div>
 </div>
 
@@ -426,7 +386,7 @@
                 <div class="slider-row">
                     <div class="slider-col">
                         <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">2</span> px</label>
-                        <input type="range" id="kcSpace3" min="-4" max="15" value="2" step="1">
+                        <input type="range" id="kcSpace3" min="-2" max="15" value="2" step="1">
                     </div>
                     <div class="slider-col">
                         <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
@@ -476,13 +436,14 @@
     import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
     import { STLExporter } from 'three/addons/exporters/STLExporter.js'; 
 
-    // TRIGGER HIỆU ỨNG INTRO VÀ CĂN THỜI GIAN NỨT MÀN HÌNH
+    // TRIGGER ANIMATION GIỚI THIỆU ARTISTIC
     window.addEventListener('load', () => {
         setTimeout(() => {
-            document.getElementById('introScreen').classList.add('intro-out');
+            const intro = document.getElementById('introScreen');
+            intro.classList.add('intro-screen-hide');
             document.getElementById('mainContent').classList.add('show');
-            setTimeout(() => { document.getElementById('introScreen').style.display = 'none'; }, 1000);
-        }, 4200); 
+            setTimeout(() => { intro.style.display = 'none'; }, 1500); 
+        }, 4000); // Intro chạy 4 giây rồi chuyển cảnh
     });
 
     let currentQuantity = 0;
@@ -530,7 +491,7 @@
         currentQuantity = parseInt(e.target.value);
         if(!isTermsAgreed) {
             termsModal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Cấm cuộn
+            document.body.style.overflow = 'hidden'; 
             if (termsContent.scrollHeight <= termsContent.clientHeight + 5) {
                 btnAgree.disabled = false;
             }
@@ -616,7 +577,7 @@
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        // KHÓA ZOOM VÀ PAN ĐỂ TRÁNH MẤT MÔ HÌNH KHỎI MÀN HÌNH KHI LĂN CHUỘT
+        // KHÓA LĂN CHUỘT / PAN ĐỂ FIX LỖI MẤT MÔ HÌNH 3D
         controls.enableZoom = false;
         controls.enablePan = false;
 
@@ -728,7 +689,7 @@
             }
 
             const posX = parseFloat(inputX.value);
-            // CHỈNH SỬA TỌA ĐỘ Y
+            // 👇 CHỈNH SỬA TỌA ĐỘ Y Ở ĐÂY 👇
             const posY = (fontKey === 'tallfont') ? 0.4 : 0; 
             const posZ = 0.3; 
             
