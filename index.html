@@ -25,7 +25,7 @@
             color: #e2e8f0; position: relative;
         }
 
-        /* Tách nền ra layer riêng để form không bị giật khi animation chạy */
+        /* NỀN CHUYỂN ĐỘNG TRÊN LAYER ĐỘC LẬP */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
             background: linear-gradient(135deg, rgba(0,4,40,0.85) 0%, rgba(0,78,146,0.85) 100%), url('https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png');
@@ -150,7 +150,7 @@
         .btn-outline { background: transparent; border: 1px solid #38bdf8; color: #38bdf8; box-shadow: none; }
         .btn-outline:hover { background: rgba(56, 189, 248, 0.1); }
 
-        /* BẢNG LƯU Ý */
+        /* CSS BẢNG LƯU Ý */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -566,9 +566,7 @@
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        
-        // FIX BUG LĂN CHUỘT: TẮT ZOOM VÀ PAN MÔ HÌNH 3D
-        controls.enableZoom = false;
+        controls.enableZoom = false; // Fix lỗi lăn chuột mất mô hình
         controls.enablePan = false;
 
         const exportGroup = new THREE.Group();
@@ -617,7 +615,8 @@
                 textGroup.children.forEach(child => { child.geometry.dispose(); child.material.dispose(); });
             }
 
-            const thickness = 1.8; 
+            // Tăng thêm 0.1mm để đâm sâu vào vật thể gốc (Khóa khớp)
+            const thickness = 1.9; 
             const spacing = parseFloat(inputSpace.value); 
             const userScale = parseFloat(inputScale.value);
             
@@ -652,7 +651,6 @@
                 const svgLoader = new SVGLoader();
                 const svgData = svgLoader.parse(svgString);
 
-                // KHÔNG DÙNG DoubleSide ĐỂ ĐẢM BẢO LƯỚI NORMALS CHUẨN 100% CHO IN 3D
                 const textMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.3 });
                 const baseScale = 0.08; 
                 const extrudeDepth = thickness / baseScale;
@@ -663,19 +661,21 @@
                     for (const shape of shapes) {
                         const geo = new THREE.ExtrudeGeometry(shape, { depth: extrudeDepth, bevelEnabled: false, curveSegments: 4 });
                         
-                        // 1. Áp dụng Scale TRỰC TIẾP vào lưới (Lật Y để chữ đứng thẳng)
-                        geo.scale(finalScale, -finalScale, baseScale);
+                        // FIX LỖI NGƯỢC MẶT INVERTED NORMALS KHI XUẤT STL
+                        const matrix = new THREE.Matrix4().makeScale(finalScale, -finalScale, baseScale);
+                        geo.applyMatrix4(matrix);
 
-                        // 2. THUẬT TOÁN ĐẢO CHIỀU NORMALS (FIX LỖI HỞ RUỘT/RỖNG MÔ HÌNH TRÊN BAMBU STUDIO)
-                        if (geo.index) {
-                            const arr = geo.index.array;
-                            for (let k = 0; k < arr.length; k += 3) {
-                                const temp = arr[k + 1];
-                                arr[k + 1] = arr[k + 2];
-                                arr[k + 2] = temp;
+                        // Đảo lại Winding Order để Normal hướng ra ngoài
+                        const index = geo.getIndex();
+                        if (index !== null) {
+                            for (let k = 0; k < index.count; k += 3) {
+                                const b = index.getX(k + 1);
+                                const c = index.getX(k + 2);
+                                index.setX(k + 1, c);
+                                index.setX(k + 2, b);
                             }
                         }
-                        geo.computeVertexNormals(); // Cập nhật lại hướng sáng bề mặt
+                        geo.computeVertexNormals();
 
                         const mesh = new THREE.Mesh(geo, textMat);
                         textGroup.add(mesh);
@@ -690,25 +690,20 @@
                     child.position.x -= center.x;
                     child.position.y -= center.y;
                 });
-
-                textGroup.scale.set(1, 1, 1); // Trả lại Scale nguyên gốc vì đã Scale thẳng vào Lưới
             }
 
             const posX = parseFloat(inputX.value);
             const posY = (fontKey === 'tallfont') ? 0.4 : 0; 
-            const posZ = 0.3; 
+            // Hạ độ cao từ 0.3 xuống 0.2 để chữ chìm 0.1mm vào thân cà vạt (chống hở layer Bambu Studio)
+            const posZ = 0.2; 
             
             textGroup.position.set(posX, posY, posZ); 
             exportGroup.add(textGroup);
         };
 
         inputFont.addEventListener('change', () => {
-            if (inputFont.value === 'montserrat') {
-                inputSpace.min = -2; inputSpace.max = 15; inputSpace.value = 2;
-            } else {
-                inputSpace.min = -4; inputSpace.max = 15; inputSpace.value = 2;
-            }
-            document.getElementById(`valSpace${index}`).textContent = inputSpace.value;
+            inputSpace.max = 15; inputSpace.value = 2;
+            document.getElementById(`valSpace${index}`).textContent = 2;
             updateText();
         });
 
