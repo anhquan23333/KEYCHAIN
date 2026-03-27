@@ -566,7 +566,7 @@
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.enableZoom = false; // Fix lỗi lăn chuột mất mô hình
+        controls.enableZoom = false; // TẮT ZOOM MÔ HÌNH
         controls.enablePan = false;
 
         const exportGroup = new THREE.Group();
@@ -615,7 +615,7 @@
                 textGroup.children.forEach(child => { child.geometry.dispose(); child.material.dispose(); });
             }
 
-            // Tăng thêm 0.1mm để đâm sâu vào vật thể gốc (Khóa khớp)
+            // Tăng độ dày chữ lên 1.9mm để cắm sâu 0.15mm vào đế cà vạt
             const thickness = 1.9; 
             const spacing = parseFloat(inputSpace.value); 
             const userScale = parseFloat(inputScale.value);
@@ -651,28 +651,35 @@
                 const svgLoader = new SVGLoader();
                 const svgData = svgLoader.parse(svgString);
 
+                // LOẠI BỎ DoubleSide ĐỂ KIỂM TRA LỖI NGUỢC MẶT TRỰC QUAN
                 const textMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.3 });
                 const baseScale = 0.08; 
                 const extrudeDepth = thickness / baseScale;
-                const finalScale = baseScale * userScale;
 
                 for (const p of svgData.paths) {
                     const shapes = SVGLoader.createShapes(p);
                     for (const shape of shapes) {
                         const geo = new THREE.ExtrudeGeometry(shape, { depth: extrudeDepth, bevelEnabled: false, curveSegments: 4 });
                         
-                        // FIX LỖI NGƯỢC MẶT INVERTED NORMALS KHI XUẤT STL
-                        const matrix = new THREE.Matrix4().makeScale(finalScale, -finalScale, baseScale);
-                        geo.applyMatrix4(matrix);
+                        // BƯỚC 1: Lật ngược trục Y vào sâu trong cấu trúc hình học (thay vì scale âm toàn khối)
+                        geo.applyMatrix4(new THREE.Matrix4().makeScale(1, -1, 1));
 
-                        // Đảo lại Winding Order để Normal hướng ra ngoài
-                        const index = geo.getIndex();
-                        if (index !== null) {
-                            for (let k = 0; k < index.count; k += 3) {
-                                const b = index.getX(k + 1);
-                                const c = index.getX(k + 2);
-                                index.setX(k + 1, c);
-                                index.setX(k + 2, b);
+                        // BƯỚC 2: Sửa lỗi Winding Order (đảo ngược tọa độ để mặt Normal hướng ra ngoài)
+                        const indexAttr = geo.getIndex();
+                        if (indexAttr !== null) {
+                            for (let k = 0; k < indexAttr.count; k += 3) {
+                                const b = indexAttr.getX(k + 1);
+                                const c = indexAttr.getX(k + 2);
+                                indexAttr.setX(k + 1, c);
+                                indexAttr.setX(k + 2, b);
+                            }
+                        } else {
+                            const pos = geo.getAttribute('position');
+                            for (let k = 0; k < pos.count; k += 3) {
+                                const x1 = pos.getX(k + 1); const y1 = pos.getY(k + 1); const z1 = pos.getZ(k + 1);
+                                const x2 = pos.getX(k + 2); const y2 = pos.getY(k + 2); const z2 = pos.getZ(k + 2);
+                                pos.setXYZ(k + 1, x2, y2, z2);
+                                pos.setXYZ(k + 2, x1, y1, z1);
                             }
                         }
                         geo.computeVertexNormals();
@@ -690,20 +697,28 @@
                     child.position.x -= center.x;
                     child.position.y -= center.y;
                 });
+
+                // BƯỚC 3: Scale toàn khối với bộ thông số DƯƠNG (Positive) để STL không bị hiểu nhầm là khối âm rỗng
+                const finalScale = baseScale * userScale;
+                textGroup.scale.set(finalScale, finalScale, baseScale);
             }
 
             const posX = parseFloat(inputX.value);
             const posY = (fontKey === 'tallfont') ? 0.4 : 0; 
-            // Hạ độ cao từ 0.3 xuống 0.2 để chữ chìm 0.1mm vào thân cà vạt (chống hở layer Bambu Studio)
-            const posZ = 0.2; 
+            // Hạ Z xuống 0.15 để ngàm chặt vào đế cà vạt
+            const posZ = 0.15; 
             
             textGroup.position.set(posX, posY, posZ); 
             exportGroup.add(textGroup);
         };
 
         inputFont.addEventListener('change', () => {
-            inputSpace.max = 15; inputSpace.value = 2;
-            document.getElementById(`valSpace${index}`).textContent = 2;
+            if (inputFont.value === 'montserrat') {
+                inputSpace.min = -2; inputSpace.max = 15; inputSpace.value = 2;
+            } else {
+                inputSpace.min = -4; inputSpace.max = 15; inputSpace.value = 2;
+            }
+            document.getElementById(`valSpace${index}`).textContent = inputSpace.value;
             updateText();
         });
 
