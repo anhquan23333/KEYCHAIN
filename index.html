@@ -25,7 +25,7 @@
             color: #e2e8f0; position: relative;
         }
 
-        /* NỀN CHUYỂN ĐỘNG TRÊN LAYER ĐỘC LẬP */
+        /* FIX LỖI GIẬT BOX KHI NỀN CHUYỂN ĐỘNG: Tách nền ra layer riêng */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
             background: linear-gradient(135deg, rgba(0,4,40,0.85) 0%, rgba(0,78,146,0.85) 100%), url('https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png');
@@ -40,7 +40,7 @@
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        /* HIỆU ỨNG INTRO BÙNG NỔ */
+        /* HIỆU ỨNG INTRO BÙNG NỔ MỚI */
         #introScreen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #020617; 
             z-index: 999999; display: flex; justify-content: center; align-items: center;
@@ -150,7 +150,7 @@
         .btn-outline { background: transparent; border: 1px solid #38bdf8; color: #38bdf8; box-shadow: none; }
         .btn-outline:hover { background: rgba(56, 189, 248, 0.1); }
 
-        /* CSS BẢNG LƯU Ý */
+        /* BẢNG LƯU Ý (FIX LỖI LỘ NỀN) */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -223,7 +223,7 @@
     <div class="card" id="step1Card">
         <h2>Thiết Kế Cà Vạt 3D</h2>
         
-        <h3>1. Thông tin liên hệ</h3>
+        <h3>1. Thông liên hệ</h3>
         <div class="input-group"><label>Họ và Tên</label><input type="text" id="fullName" placeholder="Nhập họ và tên..." required></div>
 
         <div class="input-group">
@@ -566,8 +566,8 @@
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.enableZoom = false; // TẮT ZOOM MÔ HÌNH
-        controls.enablePan = false;
+        controls.enableZoom = false; // Khóa zoom
+        controls.enablePan = false;  // Khóa Pan (kéo dịch chuyển trục ngang/dọc)
 
         const exportGroup = new THREE.Group();
         scene.add(exportGroup);
@@ -615,8 +615,8 @@
                 textGroup.children.forEach(child => { child.geometry.dispose(); child.material.dispose(); });
             }
 
-            // Tăng độ dày chữ lên 1.9mm để cắm sâu 0.15mm vào đế cà vạt
-            const thickness = 1.9; 
+            // FIX KHỚP NỐI KHÔNG KHÔNG GIAN (Tăng độ dày để đâm sâu vào cà vạt)
+            const thickness = 2.5; 
             const spacing = parseFloat(inputSpace.value); 
             const userScale = parseFloat(inputScale.value);
             
@@ -651,30 +651,34 @@
                 const svgLoader = new SVGLoader();
                 const svgData = svgLoader.parse(svgString);
 
-                // LOẠI BỎ DoubleSide ĐỂ KIỂM TRA LỖI NGUỢC MẶT TRỰC QUAN
                 const textMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.3 });
                 const baseScale = 0.08; 
                 const extrudeDepth = thickness / baseScale;
+                const finalScale = baseScale * userScale;
 
                 for (const p of svgData.paths) {
                     const shapes = SVGLoader.createShapes(p);
                     for (const shape of shapes) {
                         const geo = new THREE.ExtrudeGeometry(shape, { depth: extrudeDepth, bevelEnabled: false, curveSegments: 4 });
                         
-                        // BƯỚC 1: Lật ngược trục Y vào sâu trong cấu trúc hình học (thay vì scale âm toàn khối)
-                        geo.applyMatrix4(new THREE.Matrix4().makeScale(1, -1, 1));
+                        // FIX LỖI NGƯỢC MẶT KHI XUẤT STL (Inverted Normals)
+                        // Ép trực tiếp Scale Matrix lật trục Y thẳng vào Geometry
+                        const matrix = new THREE.Matrix4().makeScale(finalScale, -finalScale, baseScale);
+                        geo.applyMatrix4(matrix);
 
-                        // BƯỚC 2: Sửa lỗi Winding Order (đảo ngược tọa độ để mặt Normal hướng ra ngoài)
-                        const indexAttr = geo.getIndex();
-                        if (indexAttr !== null) {
-                            for (let k = 0; k < indexAttr.count; k += 3) {
-                                const b = indexAttr.getX(k + 1);
-                                const c = indexAttr.getX(k + 2);
-                                indexAttr.setX(k + 1, c);
-                                indexAttr.setX(k + 2, b);
+                        // Đảo ngược lại thứ tự Winding Order (tam giác 1-2-3 thành 1-3-2)
+                        const index = geo.getIndex();
+                        if (index !== null) {
+                            for (let k = 0; k < index.count; k += 3) {
+                                const a = index.getX(k);
+                                const b = index.getX(k + 1);
+                                const c = index.getX(k + 2);
+                                index.setX(k, a);
+                                index.setX(k + 1, c);
+                                index.setX(k + 2, b);
                             }
                         } else {
-                            const pos = geo.getAttribute('position');
+                            const pos = geo.attributes.position;
                             for (let k = 0; k < pos.count; k += 3) {
                                 const x1 = pos.getX(k + 1); const y1 = pos.getY(k + 1); const z1 = pos.getZ(k + 1);
                                 const x2 = pos.getX(k + 2); const y2 = pos.getY(k + 2); const z2 = pos.getZ(k + 2);
@@ -697,28 +701,21 @@
                     child.position.x -= center.x;
                     child.position.y -= center.y;
                 });
-
-                // BƯỚC 3: Scale toàn khối với bộ thông số DƯƠNG (Positive) để STL không bị hiểu nhầm là khối âm rỗng
-                const finalScale = baseScale * userScale;
-                textGroup.scale.set(finalScale, finalScale, baseScale);
             }
 
             const posX = parseFloat(inputX.value);
             const posY = (fontKey === 'tallfont') ? 0.4 : 0; 
-            // Hạ Z xuống 0.15 để ngàm chặt vào đế cà vạt
-            const posZ = 0.15; 
+            
+            // FIX ZERO-THICKNESS: Hạ tâm của chữ ngập hẳn xuống điểm 0.0 (Xuyên vào giữa thân cà vạt)
+            const posZ = 0.0; 
             
             textGroup.position.set(posX, posY, posZ); 
             exportGroup.add(textGroup);
         };
 
         inputFont.addEventListener('change', () => {
-            if (inputFont.value === 'montserrat') {
-                inputSpace.min = -2; inputSpace.max = 15; inputSpace.value = 2;
-            } else {
-                inputSpace.min = -4; inputSpace.max = 15; inputSpace.value = 2;
-            }
-            document.getElementById(`valSpace${index}`).textContent = inputSpace.value;
+            inputSpace.max = 15; inputSpace.value = 2;
+            document.getElementById(`valSpace${index}`).textContent = 2;
             updateText();
         });
 
