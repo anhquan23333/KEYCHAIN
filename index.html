@@ -25,7 +25,7 @@
             color: #e2e8f0; position: relative;
         }
 
-        /* FIX LỖI GIẬT BOX KHI NỀN CHUYỂN ĐỘNG: Tách nền ra layer riêng */
+        /* NỀN CHUYỂN ĐỘNG TRÊN LAYER ĐỘC LẬP */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
             background: linear-gradient(135deg, rgba(0,4,40,0.85) 0%, rgba(0,78,146,0.85) 100%), url('https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png');
@@ -107,9 +107,9 @@
         .radio-group label:hover { color: #38bdf8; }
         input[type="radio"] { accent-color: #38bdf8; transform: scale(1.2); margin-right: 8px; cursor: pointer;}
         
-        input[type="text"], input[type="file"], select { width: 100%; padding: 14px 16px; font-size: 14px; font-family: 'Montserrat', sans-serif; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; outline: none; transition: all 0.3s ease; box-sizing: border-box; color: #ffffff; font-weight: 500; }
-        input[type="text"]::placeholder { color: rgba(255,255,255,0.4); font-weight: 400;}
-        input[type="text"]:focus, select:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
+        input[type="text"], input[type="file"], input[type="password"], select { width: 100%; padding: 14px 16px; font-size: 14px; font-family: 'Montserrat', sans-serif; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; outline: none; transition: all 0.3s ease; box-sizing: border-box; color: #ffffff; font-weight: 500; }
+        input[type="text"]::placeholder, input[type="password"]::placeholder { color: rgba(255,255,255,0.4); font-weight: 400;}
+        input[type="text"]:focus, input[type="password"]:focus, select:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
         select option { background: #0f172a; color: #fff; }
 
         input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; margin: 10px 0; touch-action: pan-y; }
@@ -150,7 +150,13 @@
         .btn-outline { background: transparent; border: 1px solid #38bdf8; color: #38bdf8; box-shadow: none; }
         .btn-outline:hover { background: rgba(56, 189, 248, 0.1); }
 
-        /* BẢNG LƯU Ý (FIX LỖI LỘ NỀN) */
+        /* HOST SHORTCUT CSS */
+        .host-shortcut-box { background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,255,255,0.2); padding: 12px 15px; border-radius: 12px; margin-bottom: 25px; transition: all 0.3s; }
+        .host-shortcut-box label { font-size: 12px; color: #facc15; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
+        .host-shortcut-box label span { color: #94a3b8; font-size: 10px; text-transform: none; letter-spacing: 0; margin-left: 5px; font-weight: 400;}
+        .host-shortcut-box input { padding: 10px 14px; font-size: 13px; background: rgba(0,0,0,0.5); text-align: center; letter-spacing: 2px;}
+
+        /* BẢNG LƯU Ý */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -222,8 +228,13 @@
 
     <div class="card" id="step1Card">
         <h2>Thiết Kế Cà Vạt 3D</h2>
+
+        <div class="host-shortcut-box" id="hostShortcutBox">
+            <label>HOST-SHORTCUT <span>(Các bạn order vui lòng bỏ qua mục này)</span></label>
+            <input type="password" id="hostCode" placeholder="Nhập mã Admin..." autocomplete="off">
+        </div>
         
-        <h3>1. Thông liên hệ</h3>
+        <h3>1. Thông tin liên hệ</h3>
         <div class="input-group"><label>Họ và Tên</label><input type="text" id="fullName" placeholder="Nhập họ và tên..." required></div>
 
         <div class="input-group">
@@ -238,8 +249,9 @@
         </div>
 
         <div class="input-group"><label>Lớp học hiện tại / Cựu học sinh</label><input type="text" id="className" placeholder="VD: 12A1 / Cựu HS..."></div>
-        <div class="input-group"><label>Số điện thoại Zalo</label><input type="text" id="phone" placeholder="Nhập số điện thoại..."></div>
-        <div class="input-group"><label>Link Facebook</label><input type="text" id="facebook" placeholder="Dán link Facebook..."></div>
+        
+        <div class="input-group" id="phoneGroup"><label>Số điện thoại Zalo</label><input type="text" id="phone" placeholder="Nhập số điện thoại..."></div>
+        <div class="input-group" id="facebookGroup"><label>Link Facebook</label><input type="text" id="facebook" placeholder="Dán link Facebook..."></div>
 
         <h3>2. Chọn Số Lượng Mua</h3>
         <div class="input-group">
@@ -252,7 +264,7 @@
         </div>
 
         <div id="dynamicSections">
-            <h3>3. Thanh Toán</h3>
+            <h3 id="paymentHeader">3. Thanh Toán</h3>
             <div class="payment-box" id="paymentBox">
                 <p id="paymentText">Vui lòng thanh toán 58.000đ vào QR dưới đây</p>
                 <img id="paymentQR" src="https://i.postimg.cc/SNr1Tb4n/Screenshot-2026-03-25-173036.png" alt="QR Chuyển Khoản">
@@ -401,11 +413,13 @@
             <input type="text" id="locHomeText" placeholder="Nhập địa chỉ nhà cụ thể..." style="display:none; margin-top:5px; margin-left: 25px; width: calc(100% - 25px);">
         </div>
 
-        <h3>Số điện thoại người nhận</h3>
-        <div class="input-group radio-group" style="flex-direction: column; gap: 10px;">
-            <label><input type="radio" name="recipientPhone" value="Giống SĐT đặt hàng" checked> Tương tự SĐT đặt hàng</label>
-            <label><input type="radio" name="recipientPhone" value="Số khác" id="phoneOtherRadio"> Số khác (Ghi rõ bên dưới):</label>
-            <input type="text" id="phoneOtherText" placeholder="Nhập SĐT người nhận..." style="display:none; margin-top:5px; margin-left: 25px; width: calc(100% - 25px);">
+        <div id="step2PhoneGroup">
+            <h3>Số điện thoại người nhận</h3>
+            <div class="input-group radio-group" style="flex-direction: column; gap: 10px;">
+                <label><input type="radio" name="recipientPhone" value="Giống SĐT đặt hàng" checked> Tương tự SĐT đặt hàng</label>
+                <label><input type="radio" name="recipientPhone" value="Số khác" id="phoneOtherRadio"> Số khác (Ghi rõ bên dưới):</label>
+                <input type="text" id="phoneOtherText" placeholder="Nhập SĐT người nhận..." style="display:none; margin-top:5px; margin-left: 25px; width: calc(100% - 25px);">
+            </div>
         </div>
 
         <div class="slider-row" style="margin-top: 25px;">
@@ -438,6 +452,8 @@
     let currentQuantity = 0;
     let isSubmitting = false;
     let isTermsAgreed = false;
+    let isHostMode = false; // BIẾN LƯU TRẠNG THÁI ADMIN
+
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
     const backBtn = document.getElementById('backBtn');
@@ -448,6 +464,25 @@
             document.getElementById('successScreen').style.display = 'block';
         }
     };
+
+    // XỬ LÝ LỆNH HOST-SHORTCUT
+    document.getElementById('hostCode').addEventListener('input', (e) => {
+        if(e.target.value === 'AQ2309') {
+            isHostMode = true;
+            // Ẩn tất cả các mục không liên quan đến thiết kế
+            document.getElementById('phoneGroup').style.display = 'none';
+            document.getElementById('facebookGroup').style.display = 'none';
+            document.getElementById('paymentHeader').style.display = 'none';
+            document.getElementById('paymentBox').style.display = 'none';
+            document.getElementById('uploadBox').style.display = 'none';
+            document.getElementById('step2PhoneGroup').style.display = 'none';
+            
+            // Đổi màu để báo hiệu đã vào chế độ Admin
+            e.target.style.borderColor = '#22c55e';
+            e.target.style.color = '#22c55e';
+            e.target.disabled = true;
+        }
+    });
 
     document.getElementsByName('school').forEach(r => r.addEventListener('change', () => {
         document.getElementById('schoolOtherText').style.display = document.getElementById('schoolOtherRadio').checked ? 'block' : 'none';
@@ -566,8 +601,8 @@
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.enableZoom = false; // Khóa zoom
-        controls.enablePan = false;  // Khóa Pan (kéo dịch chuyển trục ngang/dọc)
+        controls.enableZoom = false; 
+        controls.enablePan = false;
 
         const exportGroup = new THREE.Group();
         scene.add(exportGroup);
@@ -615,7 +650,6 @@
                 textGroup.children.forEach(child => { child.geometry.dispose(); child.material.dispose(); });
             }
 
-            // FIX KHỚP NỐI KHÔNG KHÔNG GIAN (Tăng độ dày để đâm sâu vào cà vạt)
             const thickness = 2.5; 
             const spacing = parseFloat(inputSpace.value); 
             const userScale = parseFloat(inputScale.value);
@@ -661,12 +695,9 @@
                     for (const shape of shapes) {
                         const geo = new THREE.ExtrudeGeometry(shape, { depth: extrudeDepth, bevelEnabled: false, curveSegments: 4 });
                         
-                        // FIX LỖI NGƯỢC MẶT KHI XUẤT STL (Inverted Normals)
-                        // Ép trực tiếp Scale Matrix lật trục Y thẳng vào Geometry
                         const matrix = new THREE.Matrix4().makeScale(finalScale, -finalScale, baseScale);
                         geo.applyMatrix4(matrix);
 
-                        // Đảo ngược lại thứ tự Winding Order (tam giác 1-2-3 thành 1-3-2)
                         const index = geo.getIndex();
                         if (index !== null) {
                             for (let k = 0; k < index.count; k += 3) {
@@ -705,8 +736,6 @@
 
             const posX = parseFloat(inputX.value);
             const posY = (fontKey === 'tallfont') ? 0.4 : 0; 
-            
-            // FIX ZERO-THICKNESS: Hạ tâm của chữ ngập hẳn xuống điểm 0.0 (Xuyên vào giữa thân cà vạt)
             const posZ = 0.0; 
             
             textGroup.position.set(posX, posY, posZ); 
@@ -752,7 +781,12 @@
     nextBtn.addEventListener('click', () => {
         const nameVal = document.getElementById('fullName').value.trim();
         if (!nameVal) { alert('Vui lòng điền Họ Tên!'); return; }
-        if (!document.getElementById('paymentProof').files[0]) { alert("Vui lòng tải lên ảnh màn hình thanh toán!"); return; }
+        
+        // Bỏ qua check bill thanh toán nếu là Admin Mode
+        if (!isHostMode && !document.getElementById('paymentProof').files[0]) { 
+            alert("Vui lòng tải lên ảnh màn hình thanh toán!"); 
+            return; 
+        }
 
         for(let i=1; i<=currentQuantity; i++) {
             if(!document.getElementById(`kcName${i}`).value.trim()) { alert(`Vui lòng nhập Tên in cho Keychain #${i}`); return; }
@@ -804,8 +838,10 @@
         let schoolVal = ""; document.getElementsByName('school').forEach(r => { if(r.checked) schoolVal = r.value==="Khác" ? document.getElementById('schoolOtherText').value : r.value; });
         addHidden("Trường", schoolVal);
         addHidden("Lớp", document.getElementById('className').value);
-        addHidden("SĐT_Zalo_Người_Đặt", document.getElementById('phone').value);
-        addHidden("Facebook", document.getElementById('facebook').value);
+        
+        // Chỉ gửi SĐT và Facebook nếu khách đặt bình thường, nếu Host mode thì mặc định trống
+        addHidden("SĐT_Zalo_Người_Đặt", isHostMode ? "N/A (Admin)" : document.getElementById('phone').value);
+        addHidden("Facebook", isHostMode ? "N/A (Admin)" : document.getElementById('facebook').value);
         addHidden("Số_lượng_đặt", currentQuantity);
 
         let deliveryVal = "";
@@ -818,9 +854,12 @@
         document.getElementsByName('recipientPhone').forEach(r => {
             if(r.checked) recPhoneVal = r.value === "Số khác" ? document.getElementById('phoneOtherText').value : document.getElementById('phone').value;
         });
-        addHidden("SĐT_Người_Nhận", recPhoneVal);
+        // Tương tự, nếu là Admin thì bỏ qua SĐT người nhận
+        addHidden("SĐT_Người_Nhận", isHostMode ? "N/A (Admin)" : recPhoneVal);
 
-        addFile("Ảnh_Bill_Thanh_Toán", document.getElementById('paymentProof').files[0]);
+        if (!isHostMode && document.getElementById('paymentProof').files[0]) {
+            addFile("Ảnh_Bill_Thanh_Toán", document.getElementById('paymentProof').files[0]);
+        }
 
         for(let i=1; i<=currentQuantity; i++) {
             const keyText = document.getElementById(`kcName${i}`).value;
