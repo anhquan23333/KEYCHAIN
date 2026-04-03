@@ -25,10 +25,11 @@
             color: #e2e8f0; position: relative;
         }
 
-        /* NỀN CHUYỂN ĐỘNG TRÊN LAYER ĐỘC LẬP */
+        /* FIX LỖI GIẬT BOX KHI NỀN CHUYỂN ĐỘNG & FIX LỖI ẨN ẢNH NỀN */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
-            background: linear-gradient(135deg, rgba(0,4,40,0.85) 0%, rgba(0,78,146,0.85) 100%), url('https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png');
+            /* Đã giảm độ tối của gradient xuống 0.7 và bọc url bằng ngoặc kép để tránh lỗi link */
+            background: linear-gradient(135deg, rgba(0,4,40,0.75) 0%, rgba(0,78,146,0.7) 100%), url("https://i.postimg.cc/j2btSdgz/KEYCHAIN-I-M-A-CVLER-(2).png");
             background-size: cover; background-position: center; 
             animation: backgroundZoom 20s infinite alternate ease-in-out;
             transform-origin: center center;
@@ -40,7 +41,7 @@
         .blob2 { width: 450px; height: 450px; background: #4364F7; border-radius: 50%; bottom: -100px; right: -50px; animation-delay: -6s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
         
-        /* HIỆU ỨNG INTRO BÙNG NỔ */
+        /* HIỆU ỨNG INTRO BÙNG NỔ MỚI */
         #introScreen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #020617; 
             z-index: 999999; display: flex; justify-content: center; align-items: center;
@@ -99,14 +100,6 @@
         h2 { color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 700; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; letter-spacing: 1px;}
         h3 { color: #38bdf8; font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase;}
         
-        /* GIAO DIỆN HOST SHORTCUT */
-        .host-box { background: rgba(0,0,0,0.3); border: 1px dashed rgba(56, 189, 248, 0.4); border-radius: 12px; padding: 15px; margin-bottom: 25px; transition: 0.3s ease; }
-        .host-box label { color: #38bdf8; font-size: 12px; margin-bottom: 8px; font-weight: 700; display: block;}
-        .host-box input { background: rgba(0,0,0,0.5) !important; color: #facc15 !important; font-weight: 700; letter-spacing: 2px;}
-        
-        .hide-in-host { transition: opacity 0.3s ease, height 0.3s ease; }
-        body.is-host-mode .hide-in-host { display: none !important; }
-
         .input-group { margin-bottom: 18px; }
         label { display: block; color: #cbd5e1; font-size: 13px; margin-bottom: 8px; font-weight: 500; }
         
@@ -115,9 +108,9 @@
         .radio-group label:hover { color: #38bdf8; }
         input[type="radio"] { accent-color: #38bdf8; transform: scale(1.2); margin-right: 8px; cursor: pointer;}
         
-        input[type="text"], input[type="password"], input[type="file"], select { width: 100%; padding: 14px 16px; font-size: 14px; font-family: 'Montserrat', sans-serif; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; outline: none; transition: all 0.3s ease; box-sizing: border-box; color: #ffffff; font-weight: 500; }
+        input[type="text"], input[type="file"], select, input[type="password"] { width: 100%; padding: 14px 16px; font-size: 14px; font-family: 'Montserrat', sans-serif; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; outline: none; transition: all 0.3s ease; box-sizing: border-box; color: #ffffff; font-weight: 500; }
         input[type="text"]::placeholder, input[type="password"]::placeholder { color: rgba(255,255,255,0.4); font-weight: 400;}
-        input[type="text"]:focus, input[type="password"]:focus, select:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
+        input[type="text"]:focus, select:focus, input[type="password"]:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
         select option { background: #0f172a; color: #fff; }
 
         input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; margin: 10px 0; touch-action: pan-y; }
@@ -189,6 +182,9 @@
         #step2Card, #successScreen { display: none; text-align: left; }
         #successScreen { text-align: center; padding: 50px 20px; }
         #successScreen h2 { border: none; font-size: 32px; color: #38bdf8;}
+
+        /* CSS KHUNG ADMIN */
+        .admin-box { background: rgba(250, 204, 21, 0.05); border: 1px dashed rgba(250, 204, 21, 0.4); padding: 15px; border-radius: 12px; margin-bottom: 25px; }
     </style>
 </head>
 <body>
@@ -229,17 +225,18 @@
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
     <div class="card" id="step1Card">
-        <h2>Thiết Kế Cà Vạt 3D</h2>
-
-        <div class="host-box">
-            <label>🛠 HOST-SHORTCUT <span style="text-transform:none; font-weight:normal; color:#94a3b8;">(Các bạn order vui lòng bỏ qua mục này)</span></label>
-            <input type="password" id="hostCodeInput" placeholder="Nhập mã bí mật..." autocomplete="off">
+        
+        <div class="admin-box">
+            <label style="color: #facc15; font-size: 12px; margin-bottom: 6px;">🛠 HOST-SHORTCUT (Khách hàng order bỏ qua)</label>
+            <input type="password" id="adminCode" placeholder="Nhập code admin..." autocomplete="off">
         </div>
+
+        <h2>Thiết Kế Cà Vạt 3D</h2>
         
         <h3>1. Thông tin liên hệ</h3>
-        <div class="input-group"><label>Họ và Tên (Bắt buộc)</label><input type="text" id="fullName" placeholder="Nhập họ và tên..." required></div>
+        <div class="input-group"><label>Họ và Tên</label><input type="text" id="fullName" placeholder="Nhập họ và tên..." required></div>
 
-        <div class="input-group hide-in-host">
+        <div class="input-group hide-on-admin" id="schoolGroup">
             <label>Trường đang học hiện tại</label>
             <div class="radio-group">
                 <label><input type="radio" name="school" value="THPT Châu Văn Liêm"> THPT Châu Văn Liêm</label>
@@ -252,8 +249,8 @@
 
         <div class="input-group"><label>Lớp học hiện tại / Cựu học sinh</label><input type="text" id="className" placeholder="VD: 12A1 / Cựu HS..."></div>
         
-        <div class="input-group hide-in-host"><label>Số điện thoại Zalo</label><input type="text" id="phone" placeholder="Nhập số điện thoại..."></div>
-        <div class="input-group hide-in-host"><label>Link Facebook</label><input type="text" id="facebook" placeholder="Dán link Facebook..."></div>
+        <div class="input-group hide-on-admin"><label>Số điện thoại Zalo</label><input type="text" id="phone" placeholder="Nhập số điện thoại..."></div>
+        <div class="input-group hide-on-admin"><label>Link Facebook</label><input type="text" id="facebook" placeholder="Dán link Facebook..."></div>
 
         <h3>2. Chọn Số Lượng Mua</h3>
         <div class="input-group">
@@ -266,19 +263,19 @@
         </div>
 
         <div id="dynamicSections">
-            <h3 class="hide-in-host">3. Thanh Toán</h3>
-            <div class="payment-box hide-in-host" id="paymentBox">
+            <h3 class="hide-on-admin">3. Thanh Toán</h3>
+            <div class="payment-box hide-on-admin" id="paymentBox">
                 <p id="paymentText">Vui lòng thanh toán 58.000đ vào QR dưới đây</p>
                 <img id="paymentQR" src="https://i.postimg.cc/SNr1Tb4n/Screenshot-2026-03-25-173036.png" alt="QR Chuyển Khoản">
                 <div class="payment-note">Nội dung: Họ và tên + SĐT</div>
             </div>
 
-            <div class="input-group hide-in-host" id="uploadBox">
+            <div class="input-group hide-on-admin" id="uploadBox">
                 <label>Tải lên ảnh màn hình thanh toán</label>
                 <input type="file" id="paymentProof" accept=".jpg, .jpeg, .png, .pdf">
             </div>
 
-            <h3 id="designTitle">4. Thiết Kế 3D Từng Keychain</h3>
+            <h3>4. Thiết Kế 3D Từng Keychain</h3>
             
             <div class="keychain-section" id="kcSection1">
                 <h4 class="section-title">Keychain #1</h4>
@@ -391,7 +388,7 @@
                 <div class="slider-row">
                     <div class="slider-col">
                         <label>Khoảng cách: <span id="valSpace3" style="color:#38bdf8">2</span> px</label>
-                        <input type="range" id="kcSpace3" min="-4" max="15" value="2" step="1">
+                        <input type="range" id="kcSpace3" min="-2" max="15" value="2" step="1">
                     </div>
                     <div class="slider-col">
                         <label>Trục Ngang (X): <span id="valX3" style="color:#38bdf8">0</span></label>
@@ -452,26 +449,25 @@
     let currentQuantity = 0;
     let isSubmitting = false;
     let isTermsAgreed = false;
-    let isHostMode = false; // CỜ KÍCH HOẠT CHẾ ĐỘ QUẢN TRỊ ẨN
+    let isAdmin = false; // FLAG XÁC NHẬN CHẾ ĐỘ ADMIN
 
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
     const backBtn = document.getElementById('backBtn');
     
-    // LẮNG NGHE SỰ KIỆN GÕ MÃ HOST
-    document.getElementById('hostCodeInput').addEventListener('input', (e) => {
+    // TÍNH NĂNG ADMIN MỚI
+    const adminInput = document.getElementById('adminCode');
+    adminInput.addEventListener('input', (e) => {
         if(e.target.value === 'AQ2309') {
-            isHostMode = true;
-            document.body.classList.add('is-host-mode');
-            nextBtn.textContent = "GỬI ĐƠN SỬA (HOST) 🚀";
-            isTermsAgreed = true; // Tắt luôn bảng popup lưu ý
-            document.getElementById('designTitle').textContent = "3. Thiết Kế 3D Từng Keychain";
+            isAdmin = true;
+            isTermsAgreed = true; 
+            document.querySelectorAll('.hide-on-admin').forEach(el => el.style.display = 'none');
+            nextBtn.textContent = 'TẠO FILE STL & LƯU LẠI 🚀';
         } else {
-            isHostMode = false;
-            document.body.classList.remove('is-host-mode');
-            nextBtn.textContent = "TIẾP TỤC CHỌN ĐỊA ĐIỂM ➔";
+            isAdmin = false;
             isTermsAgreed = false;
-            document.getElementById('designTitle').textContent = "4. Thiết Kế 3D Từng Keychain";
+            document.querySelectorAll('.hide-on-admin').forEach(el => el.style.display = 'block');
+            nextBtn.textContent = 'TIẾP TỤC CHỌN ĐỊA ĐIỂM ➔';
         }
     });
 
@@ -512,7 +508,7 @@
 
     document.getElementsByName('quantity').forEach(r => r.addEventListener('change', (e) => {
         currentQuantity = parseInt(e.target.value);
-        if(!isTermsAgreed && !isHostMode) {
+        if(!isTermsAgreed && !isAdmin) {
             termsModal.classList.add('active');
             document.body.style.overflow = 'hidden'; 
             if (termsContent.scrollHeight <= termsContent.clientHeight + 5) {
@@ -559,7 +555,7 @@
     function checkReady() {
         loadedAssets++;
         if (loadedAssets >= totalAssets) {
-            if(!isHostMode) nextBtn.textContent = "TIẾP TỤC CHỌN ĐỊA ĐIỂM ➔";
+            nextBtn.textContent = isAdmin ? "TẠO FILE STL & LƯU LẠI 🚀" : "TIẾP TỤC CHỌN ĐỊA ĐIỂM ➔";
             nextBtn.disabled = false;
             viewers.forEach(v => v.updateText()); 
         }
@@ -601,7 +597,7 @@
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.enableZoom = false; 
-        controls.enablePan = false;
+        controls.enablePan = false;  
 
         const exportGroup = new THREE.Group();
         scene.add(exportGroup);
@@ -777,16 +773,13 @@
     }
     animate();
 
-    // HÀM XỬ LÝ LÕI SUBMIT CHO CẢ HOST VÀ KHÁCH HÀNG THƯỜNG
-    function executeOrderSubmit() {
-        if(isHostMode) {
-            nextBtn.textContent = "ĐANG TẠO FILE STL & GỬI ĐI..."; 
-            nextBtn.disabled = true;
-        } else {
-            submitBtn.textContent = "ĐANG TẠO FILE STL & GỬI ĐI..."; 
-            submitBtn.disabled = true;
-            backBtn.disabled = true;
-        }
+    // HÀM XUẤT FILE DÙNG CHUNG CHO ADMIN VÀ USER
+    function executeSubmit() {
+        submitBtn.textContent = "ĐANG TẠO FILE STL & GỬI ĐI..."; 
+        submitBtn.disabled = true;
+        backBtn.disabled = true;
+        nextBtn.textContent = "ĐANG TẠO FILE STL & LƯU LẠI...";
+        nextBtn.disabled = true;
         isSubmitting = true;
 
         const form = document.createElement('form');
@@ -803,6 +796,7 @@
         };
 
         const addFile = (name, fileObj) => {
+            if(!fileObj) return;
             const inp = document.createElement('input');
             inp.type = 'file'; inp.name = name;
             const dt = new DataTransfer();
@@ -816,11 +810,10 @@
         
         const nameVal = document.getElementById('fullName').value.trim();
         addHidden("Họ_Tên", nameVal);
+        addHidden("Số_lượng_đặt", currentQuantity);
         
-        if(isHostMode) {
-            addHidden("Loại_Đơn", "🔧 HOST SHORTCUT - ĐƠN ADMIN SỬA");
-            addHidden("Lớp", document.getElementById('className').value || "Không ghi");
-        } else {
+        // ADMIN THÌ CHỈ CẦN TÊN + LỚP, BỎ QUA CÁC TRƯỜNG KHÁC
+        if(!isAdmin) {
             let schoolVal = ""; document.getElementsByName('school').forEach(r => { if(r.checked) schoolVal = r.value==="Khác" ? document.getElementById('schoolOtherText').value : r.value; });
             addHidden("Trường", schoolVal);
             addHidden("Lớp", document.getElementById('className').value);
@@ -842,9 +835,10 @@
             if(document.getElementById('paymentProof').files[0]) {
                 addFile("Ảnh_Bill_Thanh_Toán", document.getElementById('paymentProof').files[0]);
             }
+        } else {
+            addHidden("ĐƠN_TỪ_ADMIN", "HOST_AQ2309_BYPASS_MODE");
+            addHidden("Lớp", document.getElementById('className').value);
         }
-        
-        addHidden("Số_lượng_đặt", currentQuantity);
 
         for(let i=1; i<=currentQuantity; i++) {
             const keyText = document.getElementById(`kcName${i}`).value;
@@ -870,25 +864,21 @@
 
         document.body.appendChild(form);
         form.submit();
-        document.getElementById('thankYouMsg').textContent = isHostMode ? "Đã gửi file STL thành công về Mail Admin!" : `Cảm ơn ${nameVal} đã đồng hành cùng thiết kế của chúng mình!`;
+        document.getElementById('thankYouMsg').textContent = isAdmin ? "Host xuất file STL hoàn tất!" : `Cảm ơn ${nameVal} đã đồng hành cùng thiết kế của chúng mình!`;
     }
 
-    // XỬ LÝ NÚT NEXT BƯỚC 1 (Chuyển trang hoặc Submit luôn nếu là Host)
     nextBtn.addEventListener('click', () => {
         const nameVal = document.getElementById('fullName').value.trim();
         if (!nameVal) { alert('Vui lòng điền Họ Tên!'); return; }
-        
-        if (!isHostMode && !document.getElementById('paymentProof').files[0]) { 
-            alert("Vui lòng tải lên ảnh màn hình thanh toán!"); 
-            return; 
-        }
+        if (!isAdmin && !document.getElementById('paymentProof').files[0]) { alert("Vui lòng tải lên ảnh màn hình thanh toán!"); return; }
 
         for(let i=1; i<=currentQuantity; i++) {
             if(!document.getElementById(`kcName${i}`).value.trim()) { alert(`Vui lòng nhập Tên in cho Keychain #${i}`); return; }
         }
 
-        if(isHostMode) {
-            executeOrderSubmit(); // Host thì đâm thẳng, bỏ qua bước nhập địa chỉ nhận hàng
+        // Bỏ qua Bước 2 nếu là Admin
+        if(isAdmin) {
+            executeSubmit();
         } else {
             document.getElementById('step1Card').style.display = 'none';
             document.getElementById('step2Card').style.display = 'block';
@@ -900,7 +890,9 @@
         document.getElementById('step1Card').style.display = 'block';
     });
 
-    submitBtn.addEventListener('click', executeOrderSubmit);
+    submitBtn.addEventListener('click', () => {
+        executeSubmit();
+    });
 </script>
 
 </body>
